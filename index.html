@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <!-- Phần head: thông tin trang (không hiện trên màn hình) -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Danh sách việc cần làm</title>
+  <style>
+    /* CSS = trang trí giao diện. Bạn sẽ học kỹ hơn sau. */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: #1a2b3c;
+      background:
+        radial-gradient(circle at top left, #d9f2ff 0%, transparent 45%),
+        radial-gradient(circle at bottom right, #ffe8c8 0%, transparent 40%),
+        linear-gradient(160deg, #f7fbff, #eef5f0);
+      padding: 32px 16px 48px;
+    }
+
+    main {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      margin: 0 0 20px;
+      color: #4a5d6e;
+      line-height: 1.5;
+    }
+
+    /* Khối hiển thị phần trăm hoàn thành */
+    .progress-box {
+      margin: 0 0 28px;
+      padding: 16px 18px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(26, 43, 60, 0.08);
+      border-radius: 16px;
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+      gap: 12px;
+    }
+
+    .progress-text strong {
+      font-size: 1.5rem;
+      color: #1a6b4a;
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: rgba(26, 43, 60, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #3cb371, #1a6b4a);
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    section {
+      margin-bottom: 20px;
+      padding: 18px 20px;
+      border: 1px solid rgba(26, 43, 60, 0.08);
+      border-radius: 16px;
+    }
+
+    /* Mỗi buổi một màu nền riêng */
+    .buoi-sang {
+      background: #fff0cc;
+    }
+
+    .buoi-trua {
+      background: #d4eefe;
+    }
+
+    .buoi-toi {
+      background: #dfe3f5;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    /* Tiêu đề + hình minh họa cạnh nhau */
+    .tieu-de-buoi {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .tieu-de-buoi img {
+      width: 56px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      margin: 0 -4px;
+      border-radius: 10px;
+      transition: background 0.2s ease;
+    }
+
+    label {
+      cursor: pointer;
+      line-height: 1.4;
+    }
+
+    /* Khi tick: cả dòng tô xám */
+    li:has(input[type="checkbox"]:checked) {
+      background: #d5d9de;
+    }
+
+    input[type="checkbox"]:checked + label {
+      color: #6a7580;
+    }
+
+    .tip {
+      margin-top: 24px;
+      font-size: 0.95rem;
+      color: #4a5d6e;
+      line-height: 1.6;
+    }
+
+    code {
+      background: rgba(26, 43, 60, 0.08);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <!-- Phần body: nội dung bạn nhìn thấy trên trình duyệt -->
+  <main>
+    <h1>Danh sách việc cần làm</h1>
+    <p class="subtitle">Chia theo buổi sáng, trưa và tối. Bấm vào ô vuông để đánh dấu đã xong.</p>
+
+    <!-- Ô phần trăm: JavaScript bên dưới sẽ cập nhật số này -->
+    <div class="progress-box">
+      <div class="progress-text">
+        <span>Tiến độ hôm nay</span>
+        <strong id="phan-tram">0%</strong>
+      </div>
+      <div class="progress-bar" aria-hidden="true">
+        <div class="progress-fill" id="thanh-tien-do"></div>
+      </div>
+      <p class="subtitle" style="margin: 10px 0 0; font-size: 0.95rem;" id="chi-tiet">
+        Đã làm 0 / 9 việc
+      </p>
+    </div>
+
+    <!-- section = một khối nội dung. Mỗi buổi là một section -->
+    <section class="buoi-sang">
+      <div class="tieu-de-buoi">
+        <!-- img = gắn hình. src = đường dẫn file ảnh -->
+        <img src="assets/sang.png" alt="Minh họa buổi sáng" />
+        <h2>Buổi sáng</h2>
+      </div>
+      <!-- ul = danh sách không đánh số. li = từng việc -->
+      <ul>
+        <li>
+          <input type="checkbox" id="sang-1" />
+          <label for="sang-1">Thức dậy và uống nước</label>
+        </li>
+        <li>
+          <input type="checkbox" id="sang-2" />
+          <label for="sang-2">Tập thể dục nhẹ</label>
+        </li>
+        <li>
+          <input type="checkbox" id="sang-3" />
+          <label for="sang-3">Ăn sáng</label>
+        </li>
+      </ul>
+    </section>
+
+    <section class="buoi-trua">
+      <div class="tieu-de-buoi">
+        <img src="assets/trua.png" alt="Minh họa buổi trưa" />
+        <h2>Buổi trưa</h2>
+      </div>
+      <ul>
+        <li>
+          <input type="checkbox" id="trua-1" />
+          <label for="trua-1">Ăn trưa</label>
+        </li>
+        <li>
+          <input type="checkbox" id="trua-2" />
+          <label for="trua-2">Nghỉ ngơi / ngủ trưa ngắn</label>
+        </li>
+        <li>
+          <input type="checkbox" id="trua-3" />
+          <label for="trua-3">Học HTML 20 phút</label>
+        </li>
+      </ul>
+    </section>
+
+    <section class="buoi-toi">
+      <div class="tieu-de-buoi">
+        <img src="assets/toi.png" alt="Minh họa buổi tối" />
+        <h2>Buổi tối</h2>
+      </div>
+      <ul>
+        <li>
+          <input type="checkbox" id="toi-1" />
+          <label for="toi-1">Ăn tối</label>
+        </li>
+        <li>
+          <input type="checkbox" id="toi-2" />
+          <label for="toi-2">Ôn lại bài học trong ngày</label>
+        </li>
+        <li>
+          <input type="checkbox" id="toi-3" />
+          <label for="toi-3">Chuẩn bị đồ cho ngày mai</label>
+        </li>
+      </ul>
+    </section>
+
+    <p class="tip">
+      <strong>Mẹo học nhanh:</strong> mở file <code>index.html</code> bằng Cursor,
+      đổi chữ trong thẻ <code>&lt;label&gt;</code> thành việc của bạn,
+      lưu file (Ctrl + S), rồi nhấn F5 trên trình duyệt để xem thay đổi.
+    </p>
+  </main>
+
+  <!--
+    JavaScript = làm trang "sống": tính phần trăm khi bạn tick việc.
+    Công thức: (số việc đã tick / tổng số việc) × 100
+  -->
+  <script>
+    function capNhatPhanTram() {
+      // Lấy tất cả ô checkbox trong trang
+      const tatCaViec = document.querySelectorAll('input[type="checkbox"]');
+      const tongSo = tatCaViec.length;
+
+      // Đếm việc đã tick (checked = true)
+      let daLam = 0;
+      tatCaViec.forEach(function (o) {
+        if (o.checked) {
+          daLam = daLam + 1;
+        }
+      });
+
+      // Tính phần trăm (làm tròn số nguyên)
+      const phanTram = tongSo === 0 ? 0 : Math.round((daLam / tongSo) * 100);
+
+      // Hiển thị lên màn hình
+      document.getElementById("phan-tram").textContent = phanTram + "%";
+      document.getElementById("thanh-tien-do").style.width = phanTram + "%";
+      document.getElementById("chi-tiet").textContent =
+        "Đã làm " + daLam + " / " + tongSo + " việc";
+    }
+
+    // Mỗi khi tick / bỏ tick một việc → cập nhật lại phần trăm
+    document.querySelectorAll('input[type="checkbox"]').forEach(function (o) {
+      o.addEventListener("change", capNhatPhanTram);
+    });
+
+    // Chạy 1 lần khi mở trang
+    capNhatPhanTram();
+  </script>
+</body>
+</html>

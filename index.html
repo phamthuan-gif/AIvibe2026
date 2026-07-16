@@ -3,186 +3,114 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SkyCast — Thời tiết</title>
+  <title>Ví Ngày — Quản lý chi tiêu thông minh</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="theme-clear">
-  <div class="sky" aria-hidden="true">
-    <span class="orb sun"></span>
-    <span class="orb moon"></span>
-    <span class="cloud cloud-1"></span>
-    <span class="cloud cloud-2"></span>
-    <span class="cloud cloud-3"></span>
-    <span class="cloud cloud-4"></span>
-    <div class="rain" id="rain"></div>
-    <div class="snow" id="snow"></div>
+<body>
+  <div class="atmosphere" aria-hidden="true">
+    <span class="glow glow-a"></span>
+    <span class="glow glow-b"></span>
+    <span class="grid-fade"></span>
   </div>
 
   <main class="app">
-    <header class="header">
-      <h1 class="brand">SkyCast</h1>
-      <p class="tagline">Thời tiết Việt Nam &amp; toàn thế giới</p>
+    <header class="hero">
+      <h1 class="brand">Ví Ngày</h1>
+      <p class="lead">Theo dõi thu nhập và chi tiêu theo từng ngày</p>
+      <label class="date-field">
+        <span>Ngày</span>
+        <input type="date" id="selected-date" />
+      </label>
     </header>
 
-    <form class="search" id="search-form">
-      <input
-        type="text"
-        id="city-input"
-        placeholder="Tìm thành phố toàn cầu (vd: Tokyo, Paris, Hanoi)..."
-        autocomplete="off"
-        required
-      />
-      <button type="submit" id="search-btn">Tìm kiếm</button>
-    </form>
+    <section class="summary" aria-label="Tổng kết ngày">
+      <div class="summary-item income">
+        <span class="summary-label">Thu nhập</span>
+        <strong id="total-income">0 ₫</strong>
+      </div>
+      <div class="summary-item expense">
+        <span class="summary-label">Chi tiêu</span>
+        <strong id="total-expense">0 ₫</strong>
+      </div>
+      <div class="summary-item balance">
+        <span class="summary-label">Còn lại</span>
+        <strong id="daily-balance">0 ₫</strong>
+      </div>
+    </section>
 
-    <div class="city-groups">
-      <div class="city-group">
-        <p class="city-group-label">Việt Nam</p>
-        <div class="quick-cities" id="quick-cities-vn">
-          <button type="button" data-city="Hanoi">Hà Nội</button>
-          <button type="button" data-city="Ho Chi Minh">TP.HCM</button>
-          <button type="button" data-city="Da Nang">Đà Nẵng</button>
-          <button type="button" data-city="Hue">Huế</button>
-          <button type="button" data-city="Can Tho">Cần Thơ</button>
-          <button type="button" data-city="Nha Trang">Nha Trang</button>
-        </div>
-      </div>
-      <div class="city-group">
-        <p class="city-group-label">Quốc tế</p>
-        <div class="quick-cities" id="quick-cities-world">
-          <button type="button" data-city="Tokyo">Tokyo</button>
-          <button type="button" data-city="Seoul">Seoul</button>
-          <button type="button" data-city="Singapore">Singapore</button>
-          <button type="button" data-city="Bangkok">Bangkok</button>
-          <button type="button" data-city="London">London</button>
-          <button type="button" data-city="Paris">Paris</button>
-          <button type="button" data-city="New York">New York</button>
-          <button type="button" data-city="Los Angeles">Los Angeles</button>
-          <button type="button" data-city="Sydney">Sydney</button>
-          <button type="button" data-city="Dubai">Dubai</button>
-          <button type="button" data-city="Berlin">Berlin</button>
-          <button type="button" data-city="Moscow">Moscow</button>
-        </div>
-      </div>
+    <div class="forms-grid">
+      <section class="panel form-panel income-panel" aria-labelledby="income-title">
+        <h2 id="income-title">Nhập thu nhập</h2>
+        <p class="form-hint">Mục: Lương</p>
+        <form id="income-form" class="txn-form">
+          <label class="full">
+            <span>Số tiền (₫)</span>
+            <input type="number" id="income-amount" min="1" step="1" placeholder="VD: 10000000" required />
+          </label>
+          <label class="full">
+            <span>Ghi chú</span>
+            <input type="text" id="income-note" maxlength="80" placeholder="VD: Lương tháng 7" />
+          </label>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary btn-income" id="income-submit">Thêm thu nhập</button>
+            <button type="button" class="btn-back" id="income-back" hidden>Quay lại</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel form-panel expense-panel" aria-labelledby="expense-title">
+        <h2 id="expense-title">Nhập chi tiêu</h2>
+        <p class="form-hint">Chọn mục chi và số tiền</p>
+        <form id="expense-form" class="txn-form">
+          <label>
+            <span>Mục chi tiêu</span>
+            <select id="expense-category" required>
+              <option value="an-uong">Ăn uống</option>
+              <option value="di-chuyen">Di chuyển</option>
+              <option value="mua-sam">Mua sắm</option>
+              <option value="khac">Khác</option>
+            </select>
+          </label>
+          <label>
+            <span>Số tiền (₫)</span>
+            <input type="number" id="expense-amount" min="1" step="1" placeholder="VD: 50000" required />
+          </label>
+          <label class="full">
+            <span>Ghi chú</span>
+            <input type="text" id="expense-note" maxlength="80" placeholder="VD: Ăn trưa, xăng xe..." />
+          </label>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary btn-expense" id="expense-submit">Thêm chi tiêu</button>
+            <button type="button" class="btn-back" id="expense-back" hidden>Quay lại</button>
+          </div>
+        </form>
+      </section>
     </div>
 
-    <div class="status" id="status" hidden></div>
+    <section class="panel chart-panel" aria-labelledby="chart-title">
+      <div class="panel-head">
+        <h2 id="chart-title">Biểu đồ hôm nay</h2>
+        <p id="chart-subtitle">Thu nhập và chi tiêu theo mục</p>
+      </div>
+      <div class="chart" id="expense-chart" role="img" aria-label="Biểu đồ cột thu nhập và chi tiêu theo mục"></div>
+      <p class="chart-empty" id="chart-empty" hidden>Chưa có giao dịch trong ngày này.</p>
+    </section>
 
-    <div id="weather-panel" class="weather-panel" hidden>
-      <!-- Hero thời tiết hiện tại -->
-      <section class="hero-card" id="weather-card">
-        <div class="hero-top">
-          <div>
-            <p class="updated" id="updated-at">—</p>
-            <h2 id="city-name">—</h2>
-            <p class="weather-desc" id="weather-desc">—</p>
-          </div>
-          <img id="weather-icon" src="" alt="" width="110" height="110" />
+    <section class="panel list-panel" aria-labelledby="list-title">
+      <div class="panel-head">
+        <h2 id="list-title">Giao dịch trong ngày</h2>
+        <div class="list-tools">
+          <p id="list-count">0 giao dịch</p>
+          <button type="button" class="btn-undo" id="undo-btn" hidden>Hoàn tác</button>
         </div>
-
-        <div class="temp-block">
-          <p class="temp"><span id="temperature">—</span><sup>°C</sup></p>
-          <div class="temp-meta">
-            <p>Cảm giác như <strong id="feels-like">—</strong></p>
-            <p>
-              Cao <strong id="temp-max">—</strong>
-              · Thấp <strong id="temp-min">—</strong>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Lưới thông tin chi tiết -->
-      <section class="stats-grid" aria-label="Chi tiết thời tiết">
-        <article class="stat">
-          <span class="stat-icon">💧</span>
-          <span class="stat-label">Độ ẩm</span>
-          <span class="stat-value" id="humidity">—</span>
-        </article>
-        <article class="stat">
-          <span class="stat-icon">💨</span>
-          <span class="stat-label">Gió</span>
-          <span class="stat-value" id="wind">—</span>
-        </article>
-        <article class="stat">
-          <span class="stat-icon">🧭</span>
-          <span class="stat-label">Hướng gió</span>
-          <span class="stat-value" id="wind-dir">—</span>
-        </article>
-        <article class="stat">
-          <span class="stat-icon">📊</span>
-          <span class="stat-label">Áp suất</span>
-          <span class="stat-value" id="pressure">—</span>
-        </article>
-        <article class="stat">
-          <span class="stat-icon">👁️</span>
-          <span class="stat-label">Tầm nhìn</span>
-          <span class="stat-value" id="visibility">—</span>
-        </article>
-        <article class="stat">
-          <span class="stat-icon">☁️</span>
-          <span class="stat-label">Mây che phủ</span>
-          <span class="stat-value" id="clouds">—</span>
-        </article>
-        <article class="stat">
-          <span class="stat-icon">🌅</span>
-          <span class="stat-label">Bình minh</span>
-          <span class="stat-value" id="sunrise">—</span>
-        </article>
-        <article class="stat">
-          <span class="stat-icon">🌇</span>
-          <span class="stat-label">Hoàng hôn</span>
-          <span class="stat-value" id="sunset">—</span>
-        </article>
-      </section>
-
-      <!-- Dự báo theo giờ -->
-      <section class="section-card">
-        <div class="section-head">
-          <h3>24 giờ tới</h3>
-          <p>Dự báo từng khung 3 giờ</p>
-        </div>
-        <div class="hourly" id="hourly"></div>
-      </section>
-
-      <!-- Dự báo ngày mai -->
-      <section class="section-card tomorrow-card">
-        <div class="section-head">
-          <h3>Ngày mai</h3>
-          <p id="tomorrow-date">—</p>
-        </div>
-        <div class="tomorrow-body">
-          <div class="tomorrow-main">
-            <img id="tomorrow-icon" src="" alt="" width="72" height="72" />
-            <div>
-              <p class="tomorrow-label" id="tomorrow">—</p>
-              <p class="tomorrow-desc" id="tomorrow-desc">—</p>
-            </div>
-          </div>
-          <div class="tomorrow-stats">
-            <div>
-              <span>Nhiệt độ</span>
-              <strong id="tomorrow-temp">—</strong>
-            </div>
-            <div>
-              <span>Cao / Thấp</span>
-              <strong id="tomorrow-range">—</strong>
-            </div>
-            <div>
-              <span>Độ ẩm</span>
-              <strong id="tomorrow-humidity">—</strong>
-            </div>
-            <div>
-              <span>Xác suất mưa</span>
-              <strong id="tomorrow-pop">—</strong>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+      </div>
+      <p class="edit-banner" id="edit-banner" hidden>Đang sửa giao dịch — chỉnh số liệu rồi nhấn Lưu, hoặc Quay lại để hủy.</p>
+      <ul class="txn-list" id="transaction-list"></ul>
+      <p class="list-empty" id="list-empty">Chưa có giao dịch. Hãy thêm thu nhập hoặc chi tiêu.</p>
+    </section>
   </main>
 
   <script src="script.js"></script>

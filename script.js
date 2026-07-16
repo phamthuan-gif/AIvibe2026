@@ -1,296 +1,382 @@
-const API_KEY = "2a6ee05e6267bef08c0c66eea776b972";
+const STORAGE_KEY = "vi-ngay-transactions";
 
-const form = document.getElementById("search-form");
-const cityInput = document.getElementById("city-input");
-const searchBtn = document.getElementById("search-btn");
-const statusEl = document.getElementById("status");
-const weatherPanel = document.getElementById("weather-panel");
-const weatherCard = document.getElementById("weather-card");
-const hourlyEl = document.getElementById("hourly");
+const CATEGORIES = {
+  luong: { label: "Lương", type: "income" },
+  "an-uong": { label: "Ăn uống", type: "expense" },
+  "di-chuyen": { label: "Di chuyển", type: "expense" },
+  "mua-sam": { label: "Mua sắm", type: "expense" },
+  khac: { label: "Khác", type: "expense" },
+};
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const city = cityInput.value.trim();
-  if (!city) return;
-  await loadWeather(city);
-});
+const EXPENSE_KEYS = ["an-uong", "di-chuyen", "mua-sam", "khac"];
+const CHART_KEYS = ["luong", ...EXPENSE_KEYS];
 
-document.querySelector(".city-groups").addEventListener("click", (event) => {
-  const btn = event.target.closest("button[data-city]");
-  if (!btn) return;
-  cityInput.value = btn.dataset.city;
-  loadWeather(btn.dataset.city);
-});
+const dateInput = document.getElementById("selected-date");
+const incomeForm = document.getElementById("income-form");
+const expenseForm = document.getElementById("expense-form");
+const incomeAmountInput = document.getElementById("income-amount");
+const incomeNoteInput = document.getElementById("income-note");
+const expenseCategorySelect = document.getElementById("expense-category");
+const expenseAmountInput = document.getElementById("expense-amount");
+const expenseNoteInput = document.getElementById("expense-note");
+const incomeSubmitBtn = document.getElementById("income-submit");
+const expenseSubmitBtn = document.getElementById("expense-submit");
+const incomeBackBtn = document.getElementById("income-back");
+const expenseBackBtn = document.getElementById("expense-back");
+const undoBtn = document.getElementById("undo-btn");
+const editBanner = document.getElementById("edit-banner");
+const totalIncomeEl = document.getElementById("total-income");
+const totalExpenseEl = document.getElementById("total-expense");
+const dailyBalanceEl = document.getElementById("daily-balance");
+const chartEl = document.getElementById("expense-chart");
+const chartEmptyEl = document.getElementById("chart-empty");
+const listEl = document.getElementById("transaction-list");
+const listCountEl = document.getElementById("list-count");
 
-async function loadWeather(city) {
-  setLoading(true);
-  showStatus("Đang tải thời tiết...");
-  weatherPanel.hidden = true;
+let editingId = null;
+let undoSnapshot = null;
 
+function todayISO() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function loadAll() {
   try {
-    const [current, forecast] = await Promise.all([
-      fetchJson(
-        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric&lang=vi`
-      ),
-      fetchJson(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric&lang=vi`
-      ),
-    ]);
-
-    renderWeather(current, forecast);
-    hideStatus();
-  } catch (error) {
-    showStatus(error.message || "Không lấy được dữ liệu thời tiết.", true);
-  } finally {
-    setLoading(false);
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
   }
 }
 
-async function fetchJson(url) {
-  const response = await fetch(url);
-  const data = await response.json();
+function saveAll(items) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
 
-  if (!response.ok) {
-    if (data.cod === 401 || data.message?.includes("Invalid API key")) {
-      throw new Error("API key không hợp lệ hoặc chưa được kích hoạt.");
+function pushUndo() {
+  undoSnapshot = JSON.stringify(loadAll());
+  updateUndoButton();
+}
+
+function updateUndoButton() {
+  undoBtn.hidden = !undoSnapshot;
+}
+
+function formatMoney(value) {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function getSelectedDate() {
+  return dateInput.value || todayISO();
+}
+
+function getDayTransactions() {
+  const date = getSelectedDate();
+  return loadAll()
+    .filter((item) => item.date === date)
+    .sort((a, b) => b.createdAt - a.createdAt);
+}
+
+function calcDayTotals(items) {
+  let income = 0;
+  let expense = 0;
+
+  for (const item of items) {
+    if (CATEGORIES[item.category]?.type === "income") {
+      income += item.amount;
+    } else {
+      expense += item.amount;
     }
-    if (data.cod === "404" || data.cod === 404) {
-      throw new Error("Không tìm thấy thành phố. Thử tên tiếng Anh (vd: Tokyo, Paris, Hanoi).");
-    }
-    throw new Error(data.message || "Lỗi khi gọi OpenWeatherMap API.");
   }
 
-  return data;
+  return { income, expense, balance: income - expense };
 }
 
-function renderWeather(current, forecast) {
-  const timezone = current.timezone || 0;
-  const description = current.weather[0]?.description || "—";
-  const icon = current.weather[0]?.icon || "01d";
-  const tomorrow = getTomorrowForecast(forecast, timezone);
+function totalsByCategory(items) {
+  const totals = Object.fromEntries(CHART_KEYS.map((key) => [key, 0]));
 
-  setText("city-name", `${current.name}${current.sys?.country ? ", " + current.sys.country : ""}`);
-  setText("weather-desc", description);
-  setText("temperature", Math.round(current.main.temp));
-  setText("feels-like", `${Math.round(current.main.feels_like)}°C`);
-  setText("temp-max", `${Math.round(current.main.temp_max)}°`);
-  setText("temp-min", `${Math.round(current.main.temp_min)}°`);
-  setText("humidity", `${current.main.humidity}%`);
-  setText("wind", `${Math.round((current.wind?.speed || 0) * 3.6)} km/h`);
-  setText("wind-dir", degToCompass(current.wind?.deg));
-  setText("pressure", `${current.main.pressure} hPa`);
-  setText("visibility", formatVisibility(current.visibility));
-  setText("clouds", `${current.clouds?.all ?? 0}%`);
-  setText("sunrise", formatUnixTime(current.sys.sunrise, timezone));
-  setText("sunset", formatUnixTime(current.sys.sunset, timezone));
-  setText("updated-at", `Cập nhật ${formatUnixTime(current.dt, timezone)}`);
+  for (const item of items) {
+    if (CHART_KEYS.includes(item.category)) {
+      totals[item.category] += item.amount;
+    }
+  }
 
-  const weatherIcon = document.getElementById("weather-icon");
-  weatherIcon.src = `https://openweathermap.org/img/wn/${icon}@2x.png`;
-  weatherIcon.alt = description;
-
-  setText("tomorrow", tomorrow.label);
-  setText("tomorrow-desc", tomorrow.detail);
-  setText("tomorrow-date", tomorrow.dateLabel);
-  setText("tomorrow-temp", tomorrow.temp);
-  setText("tomorrow-range", tomorrow.range);
-  setText("tomorrow-humidity", tomorrow.humidity);
-  setText("tomorrow-pop", tomorrow.pop);
-
-  const tomorrowIcon = document.getElementById("tomorrow-icon");
-  tomorrowIcon.src = `https://openweathermap.org/img/wn/${tomorrow.icon}@2x.png`;
-  tomorrowIcon.alt = tomorrow.detail;
-
-  renderHourly(forecast.list.slice(0, 8), timezone);
-  applyWeatherTheme(current);
-
-  weatherPanel.hidden = false;
-  weatherPanel.style.animation = "none";
-  void weatherPanel.offsetWidth;
-  weatherPanel.style.animation = "";
-
-  const tempEl = document.getElementById("temperature");
-  tempEl.style.animation = "none";
-  void tempEl.offsetWidth;
-  tempEl.style.animation = "";
+  return totals;
 }
 
-function renderHourly(items, timezone) {
-  hourlyEl.innerHTML = items
-    .map((item, index) => {
-      const icon = item.weather[0]?.icon || "01d";
-      const temp = Math.round(item.main.temp);
-      const pop = Math.round((item.pop || 0) * 100);
-      const time = formatUnixTime(item.dt, timezone);
-      return `
-        <div class="hour-item" style="animation-delay: ${index * 0.05}s">
-          <span class="hour-time">${time}</span>
-          <img src="https://openweathermap.org/img/wn/${icon}.png" alt="" />
-          <span class="hour-temp">${temp}°</span>
-          <span class="hour-pop">💧 ${pop}%</span>
+function renderSummary(totals) {
+  totalIncomeEl.textContent = formatMoney(totals.income);
+  totalExpenseEl.textContent = formatMoney(totals.expense);
+  dailyBalanceEl.textContent = formatMoney(totals.balance);
+  dailyBalanceEl.classList.toggle("positive", totals.balance >= 0);
+  dailyBalanceEl.classList.toggle("negative", totals.balance < 0);
+}
+
+function renderChart(categoryTotals) {
+  const values = CHART_KEYS.map((key) => categoryTotals[key]);
+  const max = Math.max(...values, 0);
+  const hasData = max > 0;
+
+  chartEl.hidden = !hasData;
+  chartEmptyEl.hidden = hasData;
+
+  if (!hasData) {
+    chartEl.innerHTML = "";
+    return;
+  }
+
+  chartEl.innerHTML = CHART_KEYS.map((key, index) => {
+    const amount = categoryTotals[key];
+    const height = Math.max(6, Math.round((amount / max) * 160));
+    return `
+      <div class="chart-bar-group" style="animation-delay: ${index * 0.06}s">
+        <span class="chart-value">${amount ? formatMoney(amount) : "—"}</span>
+        <div class="chart-bar-track">
+          <div
+            class="chart-bar ${key}"
+            style="height: ${amount ? height : 4}px; animation-delay: ${index * 0.08}s"
+            title="${CATEGORIES[key].label}: ${formatMoney(amount)}"
+          ></div>
         </div>
+        <span class="chart-label">${CATEGORIES[key].label}</span>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderList(items) {
+  listCountEl.textContent = `${items.length} giao dịch`;
+
+  if (items.length === 0) {
+    listEl.innerHTML = "";
+    return;
+  }
+
+  listEl.innerHTML = items
+    .map((item, index) => {
+      const meta = CATEGORIES[item.category] || { label: item.category, type: "expense" };
+      const sign = meta.type === "income" ? "+" : "−";
+      const note = item.note
+        ? `<span class="txn-note">${escapeHtml(item.note)}</span>`
+        : "";
+      const editingClass = item.id === editingId ? " editing" : "";
+
+      return `
+        <li class="txn-item${editingClass}" style="animation-delay: ${index * 0.04}s">
+          <div class="txn-meta">
+            <span class="txn-cat">${meta.label}</span>
+            ${note}
+          </div>
+          <span class="txn-amount ${meta.type}">${sign}${formatMoney(item.amount)}</span>
+          <button
+            type="button"
+            class="txn-edit"
+            data-id="${item.id}"
+            aria-label="Sửa giao dịch"
+            title="Sửa"
+          >✎</button>
+          <button
+            type="button"
+            class="txn-delete"
+            data-id="${item.id}"
+            aria-label="Xóa giao dịch"
+            title="Xóa"
+          >×</button>
+        </li>
       `;
     })
     .join("");
 }
 
-/**
- * Đổi giao diện theo điều kiện thời tiết hiện tại.
- * OpenWeatherMap weather id: https://openweathermap.org/weather-conditions
- */
-function applyWeatherTheme(current) {
-  const weatherId = current.weather[0]?.id || 800;
-  const icon = current.weather[0]?.icon || "01d";
-  const isNight = icon.endsWith("n");
-
-  let theme = "theme-clear";
-
-  if (weatherId >= 200 && weatherId < 300) {
-    theme = "theme-thunder";
-  } else if (weatherId >= 300 && weatherId < 600) {
-    theme = isNight ? "theme-night-rain" : "theme-rain";
-  } else if (weatherId >= 600 && weatherId < 700) {
-    theme = "theme-snow";
-  } else if (weatherId >= 700 && weatherId < 800) {
-    theme = isNight ? "theme-night" : "theme-mist";
-  } else if (weatherId === 800) {
-    theme = isNight ? "theme-night" : "theme-clear";
-  } else if (weatherId > 800) {
-    theme = isNight ? "theme-night" : "theme-clouds";
-  }
-
-  const themeClasses = [
-    "theme-clear",
-    "theme-clouds",
-    "theme-rain",
-    "theme-thunder",
-    "theme-snow",
-    "theme-mist",
-    "theme-night",
-    "theme-night-rain",
-  ];
-
-  document.body.classList.remove(...themeClasses);
-  document.body.classList.add(theme);
+function escapeHtml(text) {
+  return text
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
 }
 
-function getTomorrowForecast(forecast, timezone) {
-  const tomorrowKey = getTomorrowDateKey(timezone);
-  const tomorrowItems = (forecast.list || []).filter((item) =>
-    item.dt_txt.startsWith(tomorrowKey)
-  );
+function setEditMode(item) {
+  editingId = item ? item.id : null;
+  editBanner.hidden = !item;
 
-  if (tomorrowItems.length === 0) {
-    return {
-      label: "Chưa có dữ liệu",
-      detail: "Không lấy được dự báo ngày mai",
-      dateLabel: "—",
-      temp: "—",
-      range: "—",
-      humidity: "—",
-      pop: "—",
-      icon: "01d",
-    };
+  const incomeActions = incomeSubmitBtn.parentElement;
+  const expenseActions = expenseSubmitBtn.parentElement;
+
+  if (!item) {
+    incomeBackBtn.hidden = true;
+    expenseBackBtn.hidden = true;
+    incomeActions.classList.remove("has-back");
+    expenseActions.classList.remove("has-back");
+    incomeSubmitBtn.textContent = "Thêm thu nhập";
+    expenseSubmitBtn.textContent = "Thêm chi tiêu";
+    incomeForm.reset();
+    expenseForm.reset();
+    expenseCategorySelect.value = "an-uong";
+    renderList(getDayTransactions());
+    return;
   }
 
-  const midday =
-    tomorrowItems.find((item) => item.dt_txt.includes("12:00:00")) ||
-    tomorrowItems[Math.floor(tomorrowItems.length / 2)];
+  const isIncome = CATEGORIES[item.category]?.type === "income";
 
-  const temps = tomorrowItems.map((item) => item.main.temp);
-  const humidities = tomorrowItems.map((item) => item.main.humidity);
-  const pops = tomorrowItems.map((item) => item.pop || 0);
-  const willRain = tomorrowItems.some((item) => isRainy(item));
-  const mainId = midday.weather[0]?.id || 800;
-  const desc = midday.weather[0]?.description || "";
-  const maxPop = Math.round(Math.max(...pops) * 100);
-
-  let label;
-  if (willRain || isRainy(midday)) {
-    label = "🌧️ Trời mưa";
-  } else if (mainId === 800) {
-    label = "☀️ Trời nắng";
-  } else if (mainId >= 801 && mainId <= 804) {
-    label = "⛅ Nhiều mây";
+  if (isIncome) {
+    incomeAmountInput.value = item.amount;
+    incomeNoteInput.value = item.note || "";
+    incomeSubmitBtn.textContent = "Lưu sửa";
+    incomeBackBtn.hidden = false;
+    incomeActions.classList.add("has-back");
+    expenseBackBtn.hidden = true;
+    expenseActions.classList.remove("has-back");
+    expenseSubmitBtn.textContent = "Thêm chi tiêu";
+    expenseForm.reset();
+    expenseCategorySelect.value = "an-uong";
+    incomeAmountInput.focus();
+    incomeAmountInput.select();
   } else {
-    label = capitalize(desc);
+    expenseCategorySelect.value = item.category;
+    expenseAmountInput.value = item.amount;
+    expenseNoteInput.value = item.note || "";
+    expenseSubmitBtn.textContent = "Lưu sửa";
+    expenseBackBtn.hidden = false;
+    expenseActions.classList.add("has-back");
+    incomeBackBtn.hidden = true;
+    incomeActions.classList.remove("has-back");
+    incomeSubmitBtn.textContent = "Thêm thu nhập";
+    incomeForm.reset();
+    expenseAmountInput.focus();
+    expenseAmountInput.select();
   }
 
-  const [y, m, d] = tomorrowKey.split("-");
-  const dateLabel = `Ngày ${Number(d)}/${Number(m)}/${y}`;
-
-  return {
-    label,
-    detail: capitalize(desc),
-    dateLabel,
-    temp: `${Math.round(midday.main.temp)}°C`,
-    range: `${Math.round(Math.max(...temps))}° / ${Math.round(Math.min(...temps))}°`,
-    humidity: `${Math.round(avg(humidities))}%`,
-    pop: `${maxPop}%`,
-    icon: midday.weather[0]?.icon || "01d",
-  };
+  renderList(getDayTransactions());
 }
 
-function isRainy(item) {
-  const id = item.weather[0]?.id || 0;
-  return (id >= 200 && id < 600) || (item.rain && Object.keys(item.rain).length > 0);
+function cancelEdit() {
+  setEditMode(null);
 }
 
-function getTomorrowDateKey(timezone) {
-  const localNow = new Date(Date.now() + timezone * 1000);
-  const utc = new Date(localNow.getTime() + localNow.getTimezoneOffset() * 60000);
-  utc.setUTCDate(utc.getUTCDate() + 1);
-  const y = utc.getUTCFullYear();
-  const m = String(utc.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(utc.getUTCDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
+function render() {
+  const items = getDayTransactions();
+  const totals = calcDayTotals(items);
+  renderSummary(totals);
+  renderChart(totalsByCategory(items));
+  renderList(items);
+  updateUndoButton();
 }
 
-function formatUnixTime(unix, timezone) {
-  const date = new Date((unix + timezone) * 1000);
-  const hours = String(date.getUTCHours()).padStart(2, "0");
-  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-  return `${hours}:${minutes}`;
+function saveTransaction(category, amount, note) {
+  if (!CATEGORIES[category] || !Number.isFinite(amount) || amount <= 0) {
+    return false;
+  }
+
+  pushUndo();
+  const items = loadAll();
+
+  if (editingId) {
+    const index = items.findIndex((item) => item.id === editingId);
+    if (index === -1) {
+      editingId = null;
+      return false;
+    }
+
+    items[index] = {
+      ...items[index],
+      category,
+      amount: Math.round(amount),
+      note,
+    };
+    saveAll(items);
+    setEditMode(null);
+    render();
+    return true;
+  }
+
+  items.push({
+    id: crypto.randomUUID(),
+    date: getSelectedDate(),
+    category,
+    amount: Math.round(amount),
+    note,
+    createdAt: Date.now(),
+  });
+  saveAll(items);
+  render();
+  return true;
 }
 
-function formatVisibility(meters) {
-  if (meters == null) return "—";
-  return `${(meters / 1000).toFixed(1)} km`;
+function onIncomeSubmit(event) {
+  event.preventDefault();
+  const amount = Number(incomeAmountInput.value);
+  const note = incomeNoteInput.value.trim();
+  if (!saveTransaction("luong", amount, note)) return;
+  if (!editingId) incomeForm.reset();
 }
 
-function degToCompass(deg) {
-  if (deg == null || Number.isNaN(deg)) return "—";
-  const dirs = ["B", "ĐB", "Đ", "ĐN", "N", "TN", "T", "TB"];
-  const index = Math.round(deg / 45) % 8;
-  return `${dirs[index]} (${deg}°)`;
+function onExpenseSubmit(event) {
+  event.preventDefault();
+  const category = expenseCategorySelect.value;
+  const amount = Number(expenseAmountInput.value);
+  const note = expenseNoteInput.value.trim();
+  const wasEditing = Boolean(editingId);
+  if (!saveTransaction(category, amount, note)) return;
+  if (!wasEditing) {
+    expenseForm.reset();
+    expenseCategorySelect.value = "an-uong";
+  }
 }
 
-function avg(numbers) {
-  return numbers.reduce((sum, n) => sum + n, 0) / numbers.length;
+function deleteTransaction(id) {
+  if (editingId === id) cancelEdit();
+  pushUndo();
+  const items = loadAll().filter((item) => item.id !== id);
+  saveAll(items);
+  render();
 }
 
-function capitalize(text) {
-  if (!text) return "";
-  return text.charAt(0).toUpperCase() + text.slice(1);
+function startEdit(id) {
+  const item = loadAll().find((entry) => entry.id === id);
+  if (!item) return;
+  setEditMode(item);
 }
 
-function setText(id, value) {
-  document.getElementById(id).textContent = value;
+function undoLastChange() {
+  if (!undoSnapshot) return;
+  const previous = undoSnapshot;
+  undoSnapshot = null;
+  localStorage.setItem(STORAGE_KEY, previous);
+  cancelEdit();
+  render();
 }
 
-function showStatus(message, isError = false) {
-  statusEl.hidden = false;
-  statusEl.textContent = message;
-  statusEl.classList.toggle("error", isError);
-}
+dateInput.value = todayISO();
+dateInput.addEventListener("change", () => {
+  cancelEdit();
+  render();
+});
+incomeForm.addEventListener("submit", onIncomeSubmit);
+expenseForm.addEventListener("submit", onExpenseSubmit);
+incomeBackBtn.addEventListener("click", cancelEdit);
+expenseBackBtn.addEventListener("click", cancelEdit);
+undoBtn.addEventListener("click", undoLastChange);
 
-function hideStatus() {
-  statusEl.hidden = true;
-  statusEl.textContent = "";
-  statusEl.classList.remove("error");
-}
+listEl.addEventListener("click", (event) => {
+  const editBtn = event.target.closest(".txn-edit");
+  if (editBtn) {
+    startEdit(editBtn.dataset.id);
+    return;
+  }
 
-function setLoading(loading) {
-  searchBtn.disabled = loading;
-  cityInput.disabled = loading;
-}
+  const deleteBtn = event.target.closest(".txn-delete");
+  if (deleteBtn) {
+    deleteTransaction(deleteBtn.dataset.id);
+  }
+});
+
+render();

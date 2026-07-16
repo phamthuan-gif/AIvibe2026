@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <!-- Phß║ºn head: th├┤ng tin trang (kh├┤ng hiß╗çn tr├¬n m├án h├¼nh) -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Danh s├ích viß╗çc cß║ºn l├ám</title>
+  <style>
+    /* CSS = trang tr├¡ giao diß╗çn. Bß║ín sß║╜ hß╗ìc kß╗╣ h╞ín sau. */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: #1a2b3c;
+      background:
+        radial-gradient(circle at top left, #d9f2ff 0%, transparent 45%),
+        radial-gradient(circle at bottom right, #ffe8c8 0%, transparent 40%),
+        linear-gradient(160deg, #f7fbff, #eef5f0);
+      padding: 32px 16px 48px;
+    }
+
+    main {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      margin: 0 0 20px;
+      color: #4a5d6e;
+      line-height: 1.5;
+    }
+
+    /* Khß╗æi hiß╗ân thß╗ï phß║ºn tr─âm ho├án th├ánh */
+    .progress-box {
+      margin: 0 0 28px;
+      padding: 16px 18px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(26, 43, 60, 0.08);
+      border-radius: 16px;
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+      gap: 12px;
+    }
+
+    .progress-text strong {
+      font-size: 1.5rem;
+      color: #1a6b4a;
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: rgba(26, 43, 60, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #3cb371, #1a6b4a);
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    section {
+      margin-bottom: 20px;
+      padding: 18px 20px;
+      border: 1px solid rgba(26, 43, 60, 0.08);
+      border-radius: 16px;
+    }
+
+    /* Mß╗ùi buß╗òi mß╗Öt m├áu nß╗ün ri├¬ng */
+    .buoi-sang {
+      background: #fff0cc;
+    }
+
+    .buoi-trua {
+      background: #d4eefe;
+    }
+
+    .buoi-toi {
+      background: #dfe3f5;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    /* Ti├¬u ─æß╗ü + h├¼nh minh hß╗ìa cß║ính nhau */
+    .tieu-de-buoi {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .tieu-de-buoi img {
+      width: 56px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      margin: 0 -4px;
+      border-radius: 10px;
+      transition: background 0.2s ease;
+    }
+
+    label {
+      cursor: pointer;
+      line-height: 1.4;
+    }
+
+    /* Khi tick: cß║ú d├▓ng t├┤ x├ím */
+    li:has(input[type="checkbox"]:checked) {
+      background: #d5d9de;
+    }
+
+    input[type="checkbox"]:checked + label {
+      color: #6a7580;
+    }
+
+    .tip {
+      margin-top: 24px;
+      font-size: 0.95rem;
+      color: #4a5d6e;
+      line-height: 1.6;
+    }
+
+    code {
+      background: rgba(26, 43, 60, 0.08);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <!-- Phß║ºn body: nß╗Öi dung bß║ín nh├¼n thß║Ñy tr├¬n tr├¼nh duyß╗çt -->
+  <main>
+    <h1>Danh s├ích viß╗çc cß║ºn l├ám</h1>
+    <p class="subtitle">Chia theo buß╗òi s├íng, tr╞░a v├á tß╗æi. Bß║Ñm v├áo ├┤ vu├┤ng ─æß╗â ─æ├ính dß║Ñu ─æ├ú xong.</p>
+
+    <!-- ├ö phß║ºn tr─âm: JavaScript b├¬n d╞░ß╗¢i sß║╜ cß║¡p nhß║¡t sß╗æ n├áy -->
+    <div class="progress-box">
+      <div class="progress-text">
+        <span>Tiß║┐n ─æß╗Ö h├┤m nay</span>
+        <strong id="phan-tram">0%</strong>
+      </div>
+      <div class="progress-bar" aria-hidden="true">
+        <div class="progress-fill" id="thanh-tien-do"></div>
+      </div>
+      <p class="subtitle" style="margin: 10px 0 0; font-size: 0.95rem;" id="chi-tiet">
+        ─É├ú l├ám 0 / 9 viß╗çc
+      </p>
+    </div>
+
+    <!-- section = mß╗Öt khß╗æi nß╗Öi dung. Mß╗ùi buß╗òi l├á mß╗Öt section -->
+    <section class="buoi-sang">
+      <div class="tieu-de-buoi">
+        <!-- img = gß║»n h├¼nh. src = ─æ╞░ß╗¥ng dß║½n file ß║únh -->
+        <img src="assets/sang.png" alt="Minh hß╗ìa buß╗òi s├íng" />
+        <h2>Buß╗òi s├íng</h2>
+      </div>
+      <!-- ul = danh s├ích kh├┤ng ─æ├ính sß╗æ. li = tß╗½ng viß╗çc -->
+      <ul>
+        <li>
+          <input type="checkbox" id="sang-1" />
+          <label for="sang-1">Thß╗⌐c dß║¡y v├á uß╗æng n╞░ß╗¢c</label>
+        </li>
+        <li>
+          <input type="checkbox" id="sang-2" />
+          <label for="sang-2">Tß║¡p thß╗â dß╗Ñc nhß║╣</label>
+        </li>
+        <li>
+          <input type="checkbox" id="sang-3" />
+          <label for="sang-3">─én s├íng</label>
+        </li>
+      </ul>
+    </section>
+
+    <section class="buoi-trua">
+      <div class="tieu-de-buoi">
+        <img src="assets/trua.png" alt="Minh hß╗ìa buß╗òi tr╞░a" />
+        <h2>Buß╗òi tr╞░a</h2>
+      </div>
+      <ul>
+        <li>
+          <input type="checkbox" id="trua-1" />
+          <label for="trua-1">─én tr╞░a</label>
+        </li>
+        <li>
+          <input type="checkbox" id="trua-2" />
+          <label for="trua-2">Nghß╗ë ng╞íi / ngß╗º tr╞░a ngß║»n</label>
+        </li>
+        <li>
+          <input type="checkbox" id="trua-3" />
+          <label for="trua-3">Hß╗ìc HTML 20 ph├║t</label>
+        </li>
+      </ul>
+    </section>
+
+    <section class="buoi-toi">
+      <div class="tieu-de-buoi">
+        <img src="assets/toi.png" alt="Minh hß╗ìa buß╗òi tß╗æi" />
+        <h2>Buß╗òi tß╗æi</h2>
+      </div>
+      <ul>
+        <li>
+          <input type="checkbox" id="toi-1" />
+          <label for="toi-1">─én tß╗æi</label>
+        </li>
+        <li>
+          <input type="checkbox" id="toi-2" />
+          <label for="toi-2">├ön lß║íi b├ái hß╗ìc trong ng├áy</label>
+        </li>
+        <li>
+          <input type="checkbox" id="toi-3" />
+          <label for="toi-3">Chuß║⌐n bß╗ï ─æß╗ô cho ng├áy mai</label>
+        </li>
+      </ul>
+    </section>
+
+    <p class="tip">
+      <strong>Mß║╣o hß╗ìc nhanh:</strong> mß╗ƒ file <code>index.html</code> bß║▒ng Cursor,
+      ─æß╗òi chß╗» trong thß║╗ <code>&lt;label&gt;</code> th├ánh viß╗çc cß╗ºa bß║ín,
+      l╞░u file (Ctrl + S), rß╗ôi nhß║Ñn F5 tr├¬n tr├¼nh duyß╗çt ─æß╗â xem thay ─æß╗òi.
+    </p>
+  </main>
+
+  <!--
+    JavaScript = l├ám trang "sß╗æng": t├¡nh phß║ºn tr─âm khi bß║ín tick viß╗çc.
+    C├┤ng thß╗⌐c: (sß╗æ viß╗çc ─æ├ú tick / tß╗òng sß╗æ viß╗çc) ├ù 100
+  -->
+  <script>
+    function capNhatPhanTram() {
+      // Lß║Ñy tß║Ñt cß║ú ├┤ checkbox trong trang
+      const tatCaViec = document.querySelectorAll('input[type="checkbox"]');
+      const tongSo = tatCaViec.length;
+
+      // ─Éß║┐m viß╗çc ─æ├ú tick (checked = true)
+      let daLam = 0;
+      tatCaViec.forEach(function (o) {
+        if (o.checked) {
+          daLam = daLam + 1;
+        }
+      });
+
+      // T├¡nh phß║ºn tr─âm (l├ám tr├▓n sß╗æ nguy├¬n)
+      const phanTram = tongSo === 0 ? 0 : Math.round((daLam / tongSo) * 100);
+
+      // Hiß╗ân thß╗ï l├¬n m├án h├¼nh
+      document.getElementById("phan-tram").textContent = phanTram + "%";
+      document.getElementById("thanh-tien-do").style.width = phanTram + "%";
+      document.getElementById("chi-tiet").textContent =
+        "─É├ú l├ám " + daLam + " / " + tongSo + " viß╗çc";
+    }
+
+    // Mß╗ùi khi tick / bß╗Å tick mß╗Öt viß╗çc ΓåÆ cß║¡p nhß║¡t lß║íi phß║ºn tr─âm
+    document.querySelectorAll('input[type="checkbox"]').forEach(function (o) {
+      o.addEventListener("change", capNhatPhanTram);
+    });
+
+    // Chß║íy 1 lß║ºn khi mß╗ƒ trang
+    capNhatPhanTram();
+  </script>
+</body>
+</html>

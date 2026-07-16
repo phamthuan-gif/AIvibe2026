@@ -3,116 +3,155 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ví Ngày — Quản lý chi tiêu thông minh</title>
+  <title>AIvibe2026 — Các chương trình</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1c2a33;
+      --soft: #5a6d78;
+      --line: rgba(28, 42, 51, 0.12);
+      --bg: #eef4f1;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Be Vietnam Pro", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 80% 50% at 0% 0%, #c9e6dc 0%, transparent 55%),
+        radial-gradient(ellipse 70% 45% at 100% 10%, #d7e4f0 0%, transparent 50%),
+        linear-gradient(165deg, #f3f7f5 0%, #dde8e3 100%);
+      padding: 40px 18px 64px;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      margin: 0;
+      font-family: "Fraunces", Georgia, serif;
+      font-size: clamp(2.4rem, 7vw, 3.4rem);
+      letter-spacing: -0.03em;
+      color: #0d6e56;
+    }
+
+    .lead {
+      margin: 10px 0 28px;
+      color: var(--soft);
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    a.card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      padding: 20px 18px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 14px 30px rgba(28, 42, 51, 0.08);
+      backdrop-filter: blur(8px);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      animation: up 0.5s ease both;
+    }
+
+    a.card:nth-child(1) { animation-delay: 0.05s; }
+    a.card:nth-child(2) { animation-delay: 0.1s; }
+    a.card:nth-child(3) { animation-delay: 0.15s; }
+    a.card:nth-child(4) { animation-delay: 0.2s; }
+
+    a.card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 36px rgba(28, 42, 51, 0.12);
+    }
+
+    .num {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--soft);
+      margin-bottom: 6px;
+    }
+
+    .card h2 {
+      margin: 0;
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 1.45rem;
+    }
+
+    .card p {
+      margin: 8px 0 0;
+      color: var(--soft);
+      line-height: 1.45;
+    }
+
+    .card.c1 h2 { color: #2a6f97; }
+    .card.c2 h2 { color: #1570b8; }
+    .card.c3 h2 { color: #0d6e56; }
+    .card.c4 h2 { color: #b86b2a; }
+
+    .path {
+      margin-top: 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #7a8b94;
+    }
+
+    @keyframes up {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
-  <div class="atmosphere" aria-hidden="true">
-    <span class="glow glow-a"></span>
-    <span class="glow glow-b"></span>
-    <span class="grid-fade"></span>
-  </div>
+  <main>
+    <h1 class="brand">AIvibe2026</h1>
+    <p class="lead">Tổng hợp các chương trình đã làm — chọn một app bên dưới để mở.</p>
 
-  <main class="app">
-    <header class="hero">
-      <h1 class="brand">Ví Ngày</h1>
-      <p class="lead">Theo dõi thu nhập và chi tiêu theo từng ngày</p>
-      <label class="date-field">
-        <span>Ngày</span>
-        <input type="date" id="selected-date" />
-      </label>
-    </header>
+    <div class="grid">
+      <a class="card c1" href="apps/01-viec-can-lam/index.html">
+        <span class="num">01</span>
+        <h2>Việc cần làm</h2>
+        <p>Danh sách công việc theo buổi sáng, trưa và tối.</p>
+        <div class="path">apps/01-viec-can-lam/</div>
+      </a>
 
-    <section class="summary" aria-label="Tổng kết ngày">
-      <div class="summary-item income">
-        <span class="summary-label">Thu nhập</span>
-        <strong id="total-income">0 ₫</strong>
-      </div>
-      <div class="summary-item expense">
-        <span class="summary-label">Chi tiêu</span>
-        <strong id="total-expense">0 ₫</strong>
-      </div>
-      <div class="summary-item balance">
-        <span class="summary-label">Còn lại</span>
-        <strong id="daily-balance">0 ₫</strong>
-      </div>
-    </section>
+      <a class="card c2" href="apps/02-skycast/index.html">
+        <span class="num">02</span>
+        <h2>SkyCast</h2>
+        <p>App thời tiết với OpenWeatherMap, dự báo và giao diện đổi theo thời tiết.</p>
+        <div class="path">apps/02-skycast/</div>
+      </a>
 
-    <div class="forms-grid">
-      <section class="panel form-panel income-panel" aria-labelledby="income-title">
-        <h2 id="income-title">Nhập thu nhập</h2>
-        <p class="form-hint">Mục: Lương</p>
-        <form id="income-form" class="txn-form">
-          <label class="full">
-            <span>Số tiền (₫)</span>
-            <input type="number" id="income-amount" min="1" step="1" placeholder="VD: 10000000" required />
-          </label>
-          <label class="full">
-            <span>Ghi chú</span>
-            <input type="text" id="income-note" maxlength="80" placeholder="VD: Lương tháng 7" />
-          </label>
-          <div class="form-actions">
-            <button type="submit" class="btn-primary btn-income" id="income-submit">Thêm thu nhập</button>
-            <button type="button" class="btn-back" id="income-back" hidden>Quay lại</button>
-          </div>
-        </form>
-      </section>
+      <a class="card c3" href="apps/03-vi-ngay/index.html">
+        <span class="num">03</span>
+        <h2>Ví Ngày</h2>
+        <p>Quản lý thu nhập &amp; chi tiêu theo ngày, biểu đồ cột, sửa và hoàn tác.</p>
+        <div class="path">apps/03-vi-ngay/</div>
+      </a>
 
-      <section class="panel form-panel expense-panel" aria-labelledby="expense-title">
-        <h2 id="expense-title">Nhập chi tiêu</h2>
-        <p class="form-hint">Chọn mục chi và số tiền</p>
-        <form id="expense-form" class="txn-form">
-          <label>
-            <span>Mục chi tiêu</span>
-            <select id="expense-category" required>
-              <option value="an-uong">Ăn uống</option>
-              <option value="di-chuyen">Di chuyển</option>
-              <option value="mua-sam">Mua sắm</option>
-              <option value="khac">Khác</option>
-            </select>
-          </label>
-          <label>
-            <span>Số tiền (₫)</span>
-            <input type="number" id="expense-amount" min="1" step="1" placeholder="VD: 50000" required />
-          </label>
-          <label class="full">
-            <span>Ghi chú</span>
-            <input type="text" id="expense-note" maxlength="80" placeholder="VD: Ăn trưa, xăng xe..." />
-          </label>
-          <div class="form-actions">
-            <button type="submit" class="btn-primary btn-expense" id="expense-submit">Thêm chi tiêu</button>
-            <button type="button" class="btn-back" id="expense-back" hidden>Quay lại</button>
-          </div>
-        </form>
-      </section>
+      <a class="card c4" href="apps/04-meo-html/index.html">
+        <span class="num">04</span>
+        <h2>Mèo HTML</h2>
+        <p>Trang học HTML/CSS/JS vui với chú mèo đổi cảm xúc và tư thế.</p>
+        <div class="path">apps/04-meo-html/</div>
+      </a>
     </div>
-
-    <section class="panel chart-panel" aria-labelledby="chart-title">
-      <div class="panel-head">
-        <h2 id="chart-title">Biểu đồ hôm nay</h2>
-        <p id="chart-subtitle">Thu nhập và chi tiêu theo mục</p>
-      </div>
-      <div class="chart" id="expense-chart" role="img" aria-label="Biểu đồ cột thu nhập và chi tiêu theo mục"></div>
-      <p class="chart-empty" id="chart-empty" hidden>Chưa có giao dịch trong ngày này.</p>
-    </section>
-
-    <section class="panel list-panel" aria-labelledby="list-title">
-      <div class="panel-head">
-        <h2 id="list-title">Giao dịch trong ngày</h2>
-        <div class="list-tools">
-          <p id="list-count">0 giao dịch</p>
-          <button type="button" class="btn-undo" id="undo-btn" hidden>Hoàn tác</button>
-        </div>
-      </div>
-      <p class="edit-banner" id="edit-banner" hidden>Đang sửa giao dịch — chỉnh số liệu rồi nhấn Lưu, hoặc Quay lại để hủy.</p>
-      <ul class="txn-list" id="transaction-list"></ul>
-      <p class="list-empty" id="list-empty">Chưa có giao dịch. Hãy thêm thu nhập hoặc chi tiêu.</p>
-    </section>
   </main>
-
-  <script src="script.js"></script>
 </body>
 </html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkyCast ΓÇö Thß╗¥i tiß║┐t</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-clear">
+  <div class="sky" aria-hidden="true">
+    <span class="orb sun"></span>
+    <span class="orb moon"></span>
+    <span class="cloud cloud-1"></span>
+    <span class="cloud cloud-2"></span>
+    <span class="cloud cloud-3"></span>
+    <span class="cloud cloud-4"></span>
+    <div class="rain" id="rain"></div>
+    <div class="snow" id="snow"></div>
+  </div>
+
+  <main class="app">
+    <header class="header">
+      <h1 class="brand">SkyCast</h1>
+      <p class="tagline">Thß╗¥i tiß║┐t Viß╗çt Nam &amp; to├án thß║┐ giß╗¢i</p>
+    </header>
+
+    <form class="search" id="search-form">
+      <input
+        type="text"
+        id="city-input"
+        placeholder="T├¼m th├ánh phß╗æ to├án cß║ºu (vd: Tokyo, Paris, Hanoi)..."
+        autocomplete="off"
+        required
+      />
+      <button type="submit" id="search-btn">T├¼m kiß║┐m</button>
+    </form>
+
+    <div class="city-groups">
+      <div class="city-group">
+        <p class="city-group-label">Viß╗çt Nam</p>
+        <div class="quick-cities" id="quick-cities-vn">
+          <button type="button" data-city="Hanoi">H├á Nß╗Öi</button>
+          <button type="button" data-city="Ho Chi Minh">TP.HCM</button>
+          <button type="button" data-city="Da Nang">─É├á Nß║╡ng</button>
+          <button type="button" data-city="Hue">Huß║┐</button>
+          <button type="button" data-city="Can Tho">Cß║ºn Th╞í</button>
+          <button type="button" data-city="Nha Trang">Nha Trang</button>
+        </div>
+      </div>
+      <div class="city-group">
+        <p class="city-group-label">Quß╗æc tß║┐</p>
+        <div class="quick-cities" id="quick-cities-world">
+          <button type="button" data-city="Tokyo">Tokyo</button>
+          <button type="button" data-city="Seoul">Seoul</button>
+          <button type="button" data-city="Singapore">Singapore</button>
+          <button type="button" data-city="Bangkok">Bangkok</button>
+          <button type="button" data-city="London">London</button>
+          <button type="button" data-city="Paris">Paris</button>
+          <button type="button" data-city="New York">New York</button>
+          <button type="button" data-city="Los Angeles">Los Angeles</button>
+          <button type="button" data-city="Sydney">Sydney</button>
+          <button type="button" data-city="Dubai">Dubai</button>
+          <button type="button" data-city="Berlin">Berlin</button>
+          <button type="button" data-city="Moscow">Moscow</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="status" id="status" hidden></div>
+
+    <div id="weather-panel" class="weather-panel" hidden>
+      <!-- Hero thß╗¥i tiß║┐t hiß╗çn tß║íi -->
+      <section class="hero-card" id="weather-card">
+        <div class="hero-top">
+          <div>
+            <p class="updated" id="updated-at">ΓÇö</p>
+            <h2 id="city-name">ΓÇö</h2>
+            <p class="weather-desc" id="weather-desc">ΓÇö</p>
+          </div>
+          <img id="weather-icon" src="" alt="" width="110" height="110" />
+        </div>
+
+        <div class="temp-block">
+          <p class="temp"><span id="temperature">ΓÇö</span><sup>┬░C</sup></p>
+          <div class="temp-meta">
+            <p>Cß║úm gi├íc nh╞░ <strong id="feels-like">ΓÇö</strong></p>
+            <p>
+              Cao <strong id="temp-max">ΓÇö</strong>
+              ┬╖ Thß║Ñp <strong id="temp-min">ΓÇö</strong>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- L╞░ß╗¢i th├┤ng tin chi tiß║┐t -->
+      <section class="stats-grid" aria-label="Chi tiß║┐t thß╗¥i tiß║┐t">
+        <article class="stat">
+          <span class="stat-icon">≡ƒÆº</span>
+          <span class="stat-label">─Éß╗Ö ß║⌐m</span>
+          <span class="stat-value" id="humidity">ΓÇö</span>
+        </article>
+        <article class="stat">
+          <span class="stat-icon">≡ƒÆ¿</span>
+          <span class="stat-label">Gi├│</span>
+          <span class="stat-value" id="wind">ΓÇö</span>
+        </article>
+        <article class="stat">
+          <span class="stat-icon">≡ƒº¡</span>
+          <span class="stat-label">H╞░ß╗¢ng gi├│</span>
+          <span class="stat-value" id="wind-dir">ΓÇö</span>
+        </article>
+        <article class="stat">
+          <span class="stat-icon">≡ƒôè</span>
+          <span class="stat-label">├üp suß║Ñt</span>
+          <span class="stat-value" id="pressure">ΓÇö</span>
+        </article>
+        <article class="stat">
+          <span class="stat-icon">≡ƒæü∩╕Å</span>
+          <span class="stat-label">Tß║ºm nh├¼n</span>
+          <span class="stat-value" id="visibility">ΓÇö</span>
+        </article>
+        <article class="stat">
+          <span class="stat-icon">Γÿü∩╕Å</span>
+          <span class="stat-label">M├óy che phß╗º</span>
+          <span class="stat-value" id="clouds">ΓÇö</span>
+        </article>
+        <article class="stat">
+          <span class="stat-icon">≡ƒîà</span>
+          <span class="stat-label">B├¼nh minh</span>
+          <span class="stat-value" id="sunrise">ΓÇö</span>
+        </article>
+        <article class="stat">
+          <span class="stat-icon">≡ƒîç</span>
+          <span class="stat-label">Ho├áng h├┤n</span>
+          <span class="stat-value" id="sunset">ΓÇö</span>
+        </article>
+      </section>
+
+      <!-- Dß╗▒ b├ío theo giß╗¥ -->
+      <section class="section-card">
+        <div class="section-head">
+          <h3>24 giß╗¥ tß╗¢i</h3>
+          <p>Dß╗▒ b├ío tß╗½ng khung 3 giß╗¥</p>
+        </div>
+        <div class="hourly" id="hourly"></div>
+      </section>
+
+      <!-- Dß╗▒ b├ío ng├áy mai -->
+      <section class="section-card tomorrow-card">
+        <div class="section-head">
+          <h3>Ng├áy mai</h3>
+          <p id="tomorrow-date">ΓÇö</p>
+        </div>
+        <div class="tomorrow-body">
+          <div class="tomorrow-main">
+            <img id="tomorrow-icon" src="" alt="" width="72" height="72" />
+            <div>
+              <p class="tomorrow-label" id="tomorrow">ΓÇö</p>
+              <p class="tomorrow-desc" id="tomorrow-desc">ΓÇö</p>
+            </div>
+          </div>
+          <div class="tomorrow-stats">
+            <div>
+              <span>Nhiß╗çt ─æß╗Ö</span>
+              <strong id="tomorrow-temp">ΓÇö</strong>
+            </div>
+            <div>
+              <span>Cao / Thß║Ñp</span>
+              <strong id="tomorrow-range">ΓÇö</strong>
+            </div>
+            <div>
+              <span>─Éß╗Ö ß║⌐m</span>
+              <strong id="tomorrow-humidity">ΓÇö</strong>
+            </div>
+            <div>
+              <span>X├íc suß║Ñt m╞░a</span>
+              <strong id="tomorrow-pop">ΓÇö</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

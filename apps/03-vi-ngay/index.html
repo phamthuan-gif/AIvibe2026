@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ví Ngày — Quản lý chi tiêu thông minh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true">
+    <span class="glow glow-a"></span>
+    <span class="glow glow-b"></span>
+    <span class="grid-fade"></span>
+  </div>
+
+  <main class="app">
+    <header class="hero">
+      <h1 class="brand">Ví Ngày</h1>
+      <p class="lead">Theo dõi thu nhập và chi tiêu theo từng ngày</p>
+      <label class="date-field">
+        <span>Ngày</span>
+        <input type="date" id="selected-date" />
+      </label>
+    </header>
+
+    <section class="summary" aria-label="Tổng kết ngày">
+      <div class="summary-item income">
+        <span class="summary-label">Thu nhập</span>
+        <strong id="total-income">0 ₫</strong>
+      </div>
+      <div class="summary-item expense">
+        <span class="summary-label">Chi tiêu</span>
+        <strong id="total-expense">0 ₫</strong>
+      </div>
+      <div class="summary-item balance">
+        <span class="summary-label">Còn lại</span>
+        <strong id="daily-balance">0 ₫</strong>
+      </div>
+    </section>
+
+    <div class="forms-grid">
+      <section class="panel form-panel income-panel" aria-labelledby="income-title">
+        <h2 id="income-title">Nhập thu nhập</h2>
+        <p class="form-hint">Mục: Lương</p>
+        <form id="income-form" class="txn-form">
+          <label class="full">
+            <span>Số tiền (₫)</span>
+            <input type="number" id="income-amount" min="1" step="1" placeholder="VD: 10000000" required />
+          </label>
+          <label class="full">
+            <span>Ghi chú</span>
+            <input type="text" id="income-note" maxlength="80" placeholder="VD: Lương tháng 7" />
+          </label>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary btn-income" id="income-submit">Thêm thu nhập</button>
+            <button type="button" class="btn-back" id="income-back" hidden>Quay lại</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel form-panel expense-panel" aria-labelledby="expense-title">
+        <h2 id="expense-title">Nhập chi tiêu</h2>
+        <p class="form-hint">Chọn mục chi và số tiền</p>
+        <form id="expense-form" class="txn-form">
+          <label>
+            <span>Mục chi tiêu</span>
+            <select id="expense-category" required>
+              <option value="an-uong">Ăn uống</option>
+              <option value="di-chuyen">Di chuyển</option>
+              <option value="mua-sam">Mua sắm</option>
+              <option value="khac">Khác</option>
+            </select>
+          </label>
+          <label>
+            <span>Số tiền (₫)</span>
+            <input type="number" id="expense-amount" min="1" step="1" placeholder="VD: 50000" required />
+          </label>
+          <label class="full">
+            <span>Ghi chú</span>
+            <input type="text" id="expense-note" maxlength="80" placeholder="VD: Ăn trưa, xăng xe..." />
+          </label>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary btn-expense" id="expense-submit">Thêm chi tiêu</button>
+            <button type="button" class="btn-back" id="expense-back" hidden>Quay lại</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <section class="panel chart-panel" aria-labelledby="chart-title">
+      <div class="panel-head">
+        <h2 id="chart-title">Biểu đồ hôm nay</h2>
+        <p id="chart-subtitle">Thu nhập và chi tiêu theo mục</p>
+      </div>
+      <div class="chart" id="expense-chart" role="img" aria-label="Biểu đồ cột thu nhập và chi tiêu theo mục"></div>
+      <p class="chart-empty" id="chart-empty" hidden>Chưa có giao dịch trong ngày này.</p>
+    </section>
+
+    <section class="panel list-panel" aria-labelledby="list-title">
+      <div class="panel-head">
+        <h2 id="list-title">Giao dịch trong ngày</h2>
+        <div class="list-tools">
+          <p id="list-count">0 giao dịch</p>
+          <button type="button" class="btn-undo" id="undo-btn" hidden>Hoàn tác</button>
+        </div>
+      </div>
+      <p class="edit-banner" id="edit-banner" hidden>Đang sửa giao dịch — chỉnh số liệu rồi nhấn Lưu, hoặc Quay lại để hủy.</p>
+      <ul class="txn-list" id="transaction-list"></ul>
+      <p class="list-empty" id="list-empty">Chưa có giao dịch. Hãy thêm thu nhập hoặc chi tiêu.</p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

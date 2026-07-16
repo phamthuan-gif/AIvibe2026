@@ -1,0 +1,395 @@
+/* =========================
+   BIẾN MÀU — bạn có thể đổi!
+   ========================= */
+:root {
+  --fur: #f4a261;          /* màu lông mèo */
+  --fur-dark: #e76f51;     /* màu đậm hơn (tai, đuôi) */
+  --belly: #ffe8d6;        /* bụng */
+  --bg: #fff6eb;           /* nền trang */
+  --stage: #c8e7ff;        /* sân chơi */
+  --ink: #2b2d42;          /* chữ */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background:
+    radial-gradient(circle at 20% 10%, #ffe0c2 0%, transparent 40%),
+    radial-gradient(circle at 90% 0%, #d4f0ff 0%, transparent 35%),
+    var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.header h1 {
+  margin: 0 0 8px;
+  font-size: 2rem;
+}
+
+.header p {
+  margin: 0 0 20px;
+  opacity: 0.85;
+}
+
+/* ========== SÂN CHƠI ========== */
+.stage {
+  position: relative;
+  height: 280px;
+  background:
+    linear-gradient(180deg, #dff3ff 0%, var(--stage) 70%, #9ccc65 70%, #8bc34a 100%);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(43, 45, 66, 0.12);
+}
+
+/* ========== CON MÈO ========== */
+.cat {
+  position: absolute;
+  left: 50%;
+  bottom: 48px;
+  width: 180px;
+  height: 140px;
+  transform: translateX(-50%);
+  transform-origin: center bottom;
+}
+
+/* Thân */
+.body {
+  position: absolute;
+  left: 30px;
+  bottom: 28px;
+  width: 120px;
+  height: 70px;
+  background: var(--fur);
+  border-radius: 50% 50% 45% 45%;
+  z-index: 2;
+}
+
+.belly {
+  position: absolute;
+  left: 28px;
+  bottom: 8px;
+  width: 64px;
+  height: 36px;
+  background: var(--belly);
+  border-radius: 50%;
+}
+
+/* Đầu */
+.head {
+  position: absolute;
+  left: 100px;
+  bottom: 70px;
+  width: 78px;
+  height: 68px;
+  z-index: 3;
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  background: var(--fur);
+  border-radius: 50% 50% 48% 48%;
+}
+
+.ear {
+  position: absolute;
+  top: -14px;
+  width: 0;
+  height: 0;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-bottom: 28px solid var(--fur-dark);
+  z-index: 1;
+}
+
+.ear-left { left: 4px; transform: rotate(-18deg); }
+.ear-right { right: 4px; transform: rotate(18deg); }
+
+.eye {
+  position: absolute;
+  top: 24px;
+  width: 12px;
+  height: 14px;
+  background: #222;
+  border-radius: 50%;
+}
+
+.eye-left { left: 18px; }
+.eye-right { right: 18px; }
+
+.nose {
+  position: absolute;
+  top: 38px;
+  left: 50%;
+  width: 12px;
+  height: 8px;
+  background: #ff8fab;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.mouth {
+  position: absolute;
+  top: 48px;
+  left: 50%;
+  width: 22px;
+  height: 10px;
+  border-bottom: 3px solid #5c4033;
+  border-radius: 0 0 50% 50%;
+  transform: translateX(-50%);
+}
+
+.whisker {
+  position: absolute;
+  top: 42px;
+  width: 28px;
+  height: 2px;
+  background: #5c4033;
+  opacity: 0.55;
+}
+
+.whisker-l1 { left: -18px; transform: rotate(12deg); }
+.whisker-l2 { left: -18px; top: 48px; transform: rotate(-8deg); }
+.whisker-r1 { right: -18px; transform: rotate(-12deg); }
+.whisker-r2 { right: -18px; top: 48px; transform: rotate(8deg); }
+
+/* Đuôi */
+.tail {
+  position: absolute;
+  left: 8px;
+  bottom: 70px;
+  width: 50px;
+  height: 14px;
+  background: var(--fur-dark);
+  border-radius: 20px 0 0 20px;
+  transform-origin: right center;
+  transform: rotate(-25deg);
+  z-index: 1;
+  animation: tail-wag 2s ease-in-out infinite;
+}
+
+@keyframes tail-wag {
+  0%, 100% { transform: rotate(-25deg); }
+  50% { transform: rotate(-5deg); }
+}
+
+/* 4 chân */
+.leg {
+  position: absolute;
+  bottom: 0;
+  width: 16px;
+  height: 36px;
+  background: var(--fur);
+  border-radius: 8px 8px 6px 6px;
+  z-index: 1;
+}
+
+.leg-front-left { left: 118px; z-index: 3; }
+.leg-front-right { left: 138px; }
+.leg-back-left { left: 42px; z-index: 3; }
+.leg-back-right { left: 62px; }
+
+/* ========== CẢM XÚC: CƯỜI ========== */
+.mood-smile .eye {
+  height: 12px;
+  border-radius: 50%;
+}
+
+.mood-smile .mouth {
+  width: 24px;
+  height: 12px;
+  border-bottom: 3px solid #5c4033;
+  border-radius: 0 0 50% 50%;
+  background: transparent;
+}
+
+/* ========== CẢM XÚC: TỨC GIẬN ========== */
+.mood-angry .eye {
+  height: 6px;
+  border-radius: 2px;
+  background: #111;
+  transform: rotate(0deg);
+}
+
+.mood-angry .eye-left {
+  transform: rotate(18deg);
+  box-shadow: 0 -4px 0 -1px var(--fur); /* lông mày nghiêng giả */
+}
+
+.mood-angry .eye-right {
+  transform: rotate(-18deg);
+}
+
+.mood-angry .mouth {
+  width: 18px;
+  height: 8px;
+  border: none;
+  border-top: 3px solid #5c4033;
+  border-radius: 50% 50% 0 0;
+  top: 50px;
+  background: transparent;
+}
+
+.mood-angry .face {
+  filter: saturate(1.2);
+}
+
+/* ========== TƯ THẾ: NẰM ========== */
+.pose-lie {
+  height: 100px;
+  bottom: 40px;
+}
+
+.pose-lie .body {
+  width: 140px;
+  height: 48px;
+  bottom: 18px;
+  border-radius: 40px;
+}
+
+.pose-lie .belly {
+  bottom: 4px;
+  height: 24px;
+}
+
+.pose-lie .head {
+  left: 120px;
+  bottom: 28px;
+}
+
+.pose-lie .leg {
+  height: 18px;
+  width: 34px;
+  bottom: 8px;
+  border-radius: 12px;
+}
+
+.pose-lie .leg-front-left { left: 120px; }
+.pose-lie .leg-front-right { left: 140px; }
+.pose-lie .leg-back-left { left: 40px; }
+.pose-lie .leg-back-right { left: 60px; }
+
+.pose-lie .tail {
+  bottom: 40px;
+  animation: none;
+  transform: rotate(-10deg);
+}
+
+/* ========== TƯ THẾ: ĐI ========== */
+.pose-walk {
+  animation: walk-across 3s linear infinite;
+}
+
+.pose-walk .leg-front-left,
+.pose-walk .leg-back-right {
+  animation: step 0.4s ease-in-out infinite;
+}
+
+.pose-walk .leg-front-right,
+.pose-walk .leg-back-left {
+  animation: step 0.4s ease-in-out infinite reverse;
+}
+
+.pose-walk .tail {
+  animation: tail-wag 0.5s ease-in-out infinite;
+}
+
+@keyframes step {
+  0%, 100% { transform: rotate(18deg); }
+  50% { transform: rotate(-18deg); }
+}
+
+@keyframes walk-across {
+  0% { left: 15%; transform: translateX(-50%) scaleX(1); }
+  49% { left: 85%; transform: translateX(-50%) scaleX(1); }
+  50% { left: 85%; transform: translateX(-50%) scaleX(-1); }
+  99% { left: 15%; transform: translateX(-50%) scaleX(-1); }
+  100% { left: 15%; transform: translateX(-50%) scaleX(1); }
+}
+
+/* ========== NÚT BẤM ========== */
+.controls {
+  margin-top: 24px;
+}
+
+.controls h2,
+.todo h2,
+.learn h2 {
+  margin: 16px 0 8px;
+  font-size: 1.1rem;
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+button {
+  border: none;
+  background: var(--fur);
+  color: #fff;
+  font-size: 1rem;
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 var(--fur-dark);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+button:hover {
+  filter: brightness(1.05);
+}
+
+button:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--fur-dark);
+}
+
+/* ========== CHECKLIST ========== */
+.todo,
+.learn {
+  margin-top: 28px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 16px;
+}
+
+.todo ol,
+.learn ul {
+  margin: 0;
+  padding-left: 22px;
+  line-height: 1.7;
+}
+
+.todo li.done {
+  color: #2a9d8f;
+}
+
+.todo li.done::marker {
+  content: "✅ ";
+}
+
+code {
+  background: #ffe8d6;
+  padding: 1px 6px;
+  border-radius: 6px;
+  font-size: 0.92em;
+}
+
+@media (max-width: 500px) {
+  .stage { height: 240px; }
+  .cat { transform: translateX(-50%) scale(0.85); }
+  .pose-walk { animation-duration: 2.4s; }
+}

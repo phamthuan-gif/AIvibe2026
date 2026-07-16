@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mèo HTML của tôi</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!--
+    CHÀO BẠN MỚI HỌC LẬP TRÌNH!
+    --------------------------------
+    HTML = khung xương trang web (các thẻ như <div>, <button>)
+    CSS  = trang điểm / hình dạng / màu sắc / chuyển động
+    JS   = hành vi khi bấm nút
+
+    File này = HTML. File style.css = CSS. Phần <script> cuối trang = JS.
+  -->
+
+  <main class="page">
+    <header class="header">
+      <h1>Mèo HTML</h1>
+      <p>Bấm các nút bên dưới để đổi cảm xúc và tư thế của mèo.</p>
+    </header>
+
+    <!-- Khu vực sân chơi chứa chú mèo -->
+    <section class="stage" aria-label="Sân chơi của mèo">
+      <div id="cat" class="cat mood-smile pose-stand" aria-label="Con mèo">
+        <!-- Đuôi -->
+        <div class="tail"></div>
+
+        <!-- Thân mình -->
+        <div class="body">
+          <div class="belly"></div>
+        </div>
+
+        <!-- Đầu + mặt -->
+        <div class="head">
+          <div class="ear ear-left"></div>
+          <div class="ear ear-right"></div>
+          <div class="face">
+            <div class="eye eye-left"></div>
+            <div class="eye eye-right"></div>
+            <div class="nose"></div>
+            <div class="mouth"></div>
+            <div class="whisker whisker-l1"></div>
+            <div class="whisker whisker-l2"></div>
+            <div class="whisker whisker-r1"></div>
+            <div class="whisker whisker-r2"></div>
+          </div>
+        </div>
+
+        <!-- 4 chân -->
+        <div class="leg leg-front-left"></div>
+        <div class="leg leg-front-right"></div>
+        <div class="leg leg-back-left"></div>
+        <div class="leg leg-back-right"></div>
+      </div>
+    </section>
+
+    <!-- Nút điều khiển -->
+    <section class="controls" aria-label="Điều khiển mèo">
+      <h2>Cảm xúc</h2>
+      <div class="btn-row">
+        <button type="button" data-mood="smile">Cười 😊</button>
+        <button type="button" data-mood="angry">Tức giận 😠</button>
+      </div>
+
+      <h2>Tư thế</h2>
+      <div class="btn-row">
+        <button type="button" data-pose="stand">Đứng</button>
+        <button type="button" data-pose="lie">Nằm</button>
+        <button type="button" data-pose="walk">Đi</button>
+      </div>
+    </section>
+
+    <!-- Checklist học tập -->
+    <section class="todo" aria-label="Việc cần làm">
+      <h2>Danh sách việc cần làm</h2>
+      <ol>
+        <li class="done">Tạo trang HTML cơ bản (<code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;body&gt;</code>)</li>
+        <li class="done">Vẽ mèo bằng các khối <code>&lt;div&gt;</code>: đầu, thân, 4 chân, đuôi</li>
+        <li class="done">Dùng CSS để tạo hình tròn, hình oval, màu lông</li>
+        <li class="done">Thêm cảm xúc: cười / tức giận (đổi mắt + miệng)</li>
+        <li class="done">Thêm tư thế: đứng / nằm / đi (animation)</li>
+        <li class="done">Thêm nút bấm bằng JavaScript để điều khiển</li>
+        <li>Tự thử: đổi màu mèo trong file <code>style.css</code> (tìm <code>--fur</code>)</li>
+        <li>Tự thử: thêm nút “Ngủ” (mắt nhắm) — hỏi mình nếu cần giúp!</li>
+      </ol>
+    </section>
+
+    <section class="learn">
+      <h2>Bạn đang học gì?</h2>
+      <ul>
+        <li><strong>HTML</strong>: các thẻ tạo cấu trúc (mèo gồm nhiều <code>div</code>)</li>
+        <li><strong>CSS</strong>: màu, kích thước, vị trí, hiệu ứng đi</li>
+        <li><strong>JavaScript</strong>: khi bấm nút → đổi class trên mèo</li>
+      </ul>
+    </section>
+  </main>
+
+  <script>
+    // Lấy phần tử mèo theo id="cat"
+    const cat = document.getElementById("cat");
+
+    // Tất cả nút cảm xúc
+    document.querySelectorAll("[data-mood]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        // Xóa class cảm xúc cũ
+        cat.classList.remove("mood-smile", "mood-angry");
+        // Thêm class mới, ví dụ mood-smile
+        cat.classList.add("mood-" + btn.dataset.mood);
+      });
+    });
+
+    // Tất cả nút tư thế
+    document.querySelectorAll("[data-pose]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        cat.classList.remove("pose-stand", "pose-lie", "pose-walk");
+        cat.classList.add("pose-" + btn.dataset.pose);
+      });
+    });
+  </script>
+</body>
+</html>

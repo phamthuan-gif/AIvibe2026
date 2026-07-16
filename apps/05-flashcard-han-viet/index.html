@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HanViet Eco — Flashcard Kinh tế</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@500;700;900&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true">
+    <span class="orb orb-a"></span>
+    <span class="orb orb-b"></span>
+    <span class="mesh"></span>
+  </div>
+
+  <main class="app">
+    <!-- START -->
+    <section id="screen-start" class="screen active">
+      <header class="hero">
+        <p class="lang-pair">한국어 · Tiếng Việt</p>
+        <h1 class="brand">HanViet Eco</h1>
+        <p class="lead">Kết nối 20 từ vựng kinh tế Hàn–Việt trong khoảng 5 phút.</p>
+      </header>
+
+      <ul class="rules">
+        <li>Mỗi câu có <strong>4 đáp án</strong> và đồng hồ đếm ngược</li>
+        <li>Đúng = xanh · Sai = đỏ · Hết giờ = sang câu tiếp</li>
+        <li>Tối đa <strong>10 điểm</strong> (0,5 điểm / câu đúng)</li>
+      </ul>
+
+      <button type="button" id="btn-start" class="btn primary">Bắt đầu chơi</button>
+    </section>
+
+    <!-- PLAY -->
+    <section id="screen-play" class="screen" hidden>
+      <div class="hud">
+        <div class="hud-item">
+          <span class="hud-label">Câu</span>
+          <strong id="q-progress">1 / 20</strong>
+        </div>
+        <div class="hud-item score-hud">
+          <span class="hud-label">Điểm</span>
+          <strong id="score-live">0</strong>
+        </div>
+        <div class="timer-wrap" aria-live="polite">
+          <svg class="timer-ring" viewBox="0 0 40 40" aria-hidden="true">
+            <circle class="timer-track" cx="20" cy="20" r="16" />
+            <circle id="timer-progress" class="timer-progress" cx="20" cy="20" r="16" />
+          </svg>
+          <span id="timer-text" class="timer-text">15</span>
+        </div>
+      </div>
+
+      <article class="prompt-card" id="prompt-card">
+        <p class="prompt-hint" id="prompt-hint">Nghĩa tiếng Việt của từ này là?</p>
+        <h2 class="prompt-word" id="prompt-word">경제</h2>
+        <p class="prompt-roman" id="prompt-roman">gyeongje</p>
+      </article>
+
+      <div class="answers" id="answers" role="group" aria-label="Đáp án"></div>
+
+      <p class="feedback" id="feedback" aria-live="assertive"></p>
+    </section>
+
+    <!-- RESULT -->
+    <section id="screen-result" class="screen" hidden>
+      <header class="result-hero">
+        <p class="result-kicker">Kết quả</p>
+        <h2 class="brand result-brand">HanViet Eco</h2>
+        <p class="result-title" id="result-title">Hoàn thành!</p>
+      </header>
+
+      <div class="result-score-block">
+        <span class="result-score" id="result-score">0</span>
+        <span class="result-max">/ 10</span>
+      </div>
+
+      <p class="result-detail" id="result-detail"></p>
+
+      <div class="result-actions">
+        <button type="button" id="btn-retry" class="btn primary">Chơi lại</button>
+        <button type="button" id="btn-home" class="btn ghost">Về màn hình chính</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="burst" class="burst" aria-hidden="true"></div>
+  <script src="script.js"></script>
+</body>
+</html>

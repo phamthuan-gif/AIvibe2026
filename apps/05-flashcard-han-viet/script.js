@@ -25,7 +25,7 @@ const VOCAB = [
 const POINTS_PER_CORRECT = 0.5;
 const MAX_SCORE = 10;
 const TIME_PER_QUESTION = 15; // giây — 20 câu ≈ 5 phút
-const FEEDBACK_DELAY = 900;
+const FEEDBACK_DELAY = 1500;
 
 const $ = (id) => document.getElementById(id);
 
@@ -50,6 +50,7 @@ const resultTitle = $("result-title");
 const resultScore = $("result-score");
 const resultDetail = $("result-detail");
 const burstEl = $("burst");
+const fxLayer = $("fx-layer");
 
 const CIRCUMFERENCE = 2 * Math.PI * 16; // r=16
 
@@ -144,6 +145,78 @@ function spawnBurst(x, y, ok) {
   }
 }
 
+function hideReaction() {
+  if (!fxLayer.classList.contains("show")) return;
+  fxLayer.classList.add("hiding");
+  setTimeout(() => {
+    fxLayer.classList.remove("show", "hiding");
+    fxLayer.innerHTML = "";
+  }, 280);
+}
+
+function spawnFireworks() {
+  const colors = ["#1a9b63", "#c9892e", "#d64545", "#5bb8e0", "#e0a820", "#0f7a5f"];
+  const spots = [
+    ["18%", "22%"],
+    ["78%", "18%"],
+    ["30%", "55%"],
+    ["70%", "50%"],
+    ["50%", "28%"],
+    ["12%", "48%"],
+    ["88%", "42%"],
+  ];
+  spots.forEach(([x, y], i) => {
+    const fw = document.createElement("span");
+    fw.className = "firework";
+    fw.style.setProperty("--x", x);
+    fw.style.setProperty("--y", y);
+    fw.style.setProperty("--c", colors[i % colors.length]);
+    fw.style.animationDelay = `${i * 0.08}s`;
+    fxLayer.appendChild(fw);
+  });
+}
+
+function showClapFireworks() {
+  fxLayer.innerHTML = "";
+  fxLayer.classList.remove("hiding");
+  fxLayer.classList.add("show");
+
+  const card = document.createElement("div");
+  card.className = "fx-card";
+  card.innerHTML = `
+    <div class="clap">
+      <span class="clap-hand left"></span>
+      <span class="clap-hand right"></span>
+      <span class="clap-spark"></span>
+      <span class="clap-spark"></span>
+      <span class="clap-spark"></span>
+    </div>
+  `;
+  fxLayer.appendChild(card);
+  spawnFireworks();
+}
+
+function showSadFace() {
+  fxLayer.innerHTML = "";
+  fxLayer.classList.remove("hiding");
+  fxLayer.classList.add("show");
+
+  const card = document.createElement("div");
+  card.className = "fx-card";
+  card.innerHTML = `
+    <div class="sad-face">
+      <span class="sad-brow l"></span>
+      <span class="sad-brow r"></span>
+      <span class="sad-eye l"></span>
+      <span class="sad-eye r"></span>
+      <span class="sad-mouth"></span>
+      <span class="sad-tear l"></span>
+      <span class="sad-tear r"></span>
+    </div>
+  `;
+  fxLayer.appendChild(card);
+}
+
 function showFeedback(type, text) {
   feedbackEl.textContent = text;
   feedbackEl.className = `feedback show ${type}`;
@@ -152,6 +225,7 @@ function showFeedback(type, text) {
 function clearFeedback() {
   feedbackEl.textContent = "";
   feedbackEl.className = "feedback";
+  hideReaction();
 }
 
 function renderQuestion() {
@@ -237,12 +311,14 @@ function onAnswer(isCorrect, btn, event) {
     promptCard.classList.add("pop");
     showFeedback("ok", `+${POINTS_PER_CORRECT} điểm`);
     spawnBurst(cx, cy, true);
+    showClapFireworks();
   } else {
     btn.classList.add("wrong");
     promptCard.classList.add("shake");
     revealCorrect();
     showFeedback("bad", "Sai rồi!");
     spawnBurst(cx, cy, false);
+    showSadFace();
   }
 
   setTimeout(nextQuestion, FEEDBACK_DELAY);
@@ -255,6 +331,7 @@ function onTimeout() {
   revealCorrect();
   promptCard.classList.add("shake");
   showFeedback("timeout", "Hết giờ!");
+  showSadFace();
   setTimeout(nextQuestion, FEEDBACK_DELAY);
 }
 

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClipHub — Chia sẻ video cùng mọi người</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true">
+    <span class="glow glow-a"></span>
+    <span class="glow glow-b"></span>
+    <span class="grain"></span>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="#" id="logo-home" aria-label="ClipHub trang chủ">
+      <span class="brand-mark" aria-hidden="true">▶</span>
+      <span class="brand-text">ClipHub</span>
+    </a>
+
+    <form class="search" id="search-form" role="search">
+      <label class="sr-only" for="search-input">Tìm video</label>
+      <input type="search" id="search-input" placeholder="Tìm video..." autocomplete="off" />
+      <button type="submit" class="search-btn" aria-label="Tìm kiếm">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" />
+          <path d="M20 20l-3.5-3.5" />
+        </svg>
+      </button>
+    </form>
+
+    <div class="top-actions">
+      <button type="button" class="btn btn-upload" id="btn-upload">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+          <path d="M12 16V5" />
+          <path d="M8 9l4-4 4 4" />
+          <path d="M4 19h16" />
+        </svg>
+        Đăng video
+      </button>
+      <a class="hub-link" href="../../index.html">AIvibe2026</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="view view-home is-active" id="view-home" aria-label="Danh sách video">
+      <div class="home-intro reveal">
+        <h1 class="home-title">Xem &amp; chia sẻ cùng nhau</h1>
+        <p class="home-lead">
+          Đăng link YouTube hoặc URL video lên <strong>phòng chung</strong> — gửi link phòng cho bạn bè để mọi người cùng xem.
+        </p>
+      </div>
+
+      <div class="room-bar reveal" id="room-bar">
+        <div class="room-info">
+          <span class="room-label">Phòng chung</span>
+          <code class="room-code" id="room-code">Đang tạo…</code>
+        </div>
+        <div class="room-actions">
+          <button type="button" class="btn btn-soft" id="btn-copy-room">Sao chép link mời</button>
+          <button type="button" class="btn btn-ghost" id="btn-join-room">Vào phòng khác</button>
+          <button type="button" class="btn btn-ghost" id="btn-refresh" title="Làm mới">↻</button>
+        </div>
+      </div>
+
+      <div class="feed-tabs" role="tablist" aria-label="Nguồn video">
+        <button type="button" class="feed-tab is-active" id="tab-community" role="tab" aria-selected="true">Cộng đồng</button>
+        <button type="button" class="feed-tab" id="tab-local" role="tab" aria-selected="false">Trên máy này</button>
+      </div>
+
+      <div class="video-grid" id="video-grid"></div>
+      <div class="empty-state" id="home-empty" hidden>
+        <p class="empty-title">Chưa có video nào</p>
+        <p class="empty-text">Bấm <strong>Đăng video</strong> rồi dán link YouTube để chia sẻ với cả phòng.</p>
+      </div>
+    </section>
+
+    <section class="view view-watch" id="view-watch" aria-label="Xem video" hidden>
+      <div class="watch-layout">
+        <div class="watch-main">
+          <div class="player-shell" id="player-shell">
+            <video id="player" controls playsinline hidden></video>
+            <iframe
+              id="yt-player"
+              title="YouTube player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+              hidden
+            ></iframe>
+
+            <div class="player-overlay" id="player-overlay">
+              <div class="quality-wrap">
+                <button type="button" class="quality-btn" id="btn-quality" aria-haspopup="menu" aria-expanded="false" title="Chất lượng" hidden>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96a7.2 7.2 0 0 0-1.62-.94l-.36-2.54A.48.48 0 0 0 14 3h-4a.48.48 0 0 0-.48.42l-.36 2.54c-.57.23-1.11.54-1.62.94l-2.39-.96a.49.49 0 0 0-.59.22L2.65 9.02a.48.48 0 0 0 .12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.77 14.5a.49.49 0 0 0-.12.61l1.92 3.32c.13.22.4.31.62.22l2.39-.96c.5.4 1.05.72 1.62.94l.36 2.54c.05.24.25.42.48.42h4c.24 0 .44-.18.48-.42l.36-2.54c.57-.23 1.11-.54 1.62-.94l2.39.96c.22.09.49 0 .62-.22l1.92-3.32a.49.49 0 0 0-.12-.61l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/>
+                  </svg>
+                  <span class="quality-btn-label" id="quality-btn-label">Auto</span>
+                </button>
+                <div class="quality-menu" id="quality-menu" role="menu" hidden>
+                  <p class="quality-menu-title">Chất lượng</p>
+                  <div id="quality-menu-list"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h2 class="watch-title" id="watch-title"></h2>
+          <div class="watch-meta">
+            <span id="watch-author"></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span id="watch-date"></span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span id="watch-size"></span>
+            <button type="button" class="btn-text danger" id="btn-delete">Xóa</button>
+          </div>
+
+          <div class="watch-actions" aria-label="Tương tác video">
+            <div class="react-group">
+              <button type="button" class="react-btn" id="btn-like" aria-pressed="false" title="Thích">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M7 22V11M2 13v7a2 2 0 0 0 2 2h11.28a2 2 0 0 0 1.94-1.52l2.26-9A2 2 0 0 0 17.54 9H13V5a3 3 0 0 0-3-3l-4 9H4a2 2 0 0 0-2 2z"/>
+                </svg>
+                <span id="like-count">0</span>
+              </button>
+              <button type="button" class="react-btn" id="btn-dislike" aria-pressed="false" title="Không thích">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M17 2v11M22 11V4a2 2 0 0 0-2-2H8.72a2 2 0 0 0-1.94 1.52l-2.26 9A2 2 0 0 0 6.46 15H11v4a3 3 0 0 0 3 3l4-9h2a2 2 0 0 0 2-2z"/>
+                </svg>
+                <span id="dislike-count">0</span>
+              </button>
+            </div>
+            <button type="button" class="react-btn react-btn-share" id="btn-share-video" title="Chia sẻ">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="18" cy="5" r="3"/>
+                <circle cx="6" cy="12" r="3"/>
+                <circle cx="18" cy="19" r="3"/>
+                <path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>
+              </svg>
+              <span>Chia sẻ</span>
+            </button>
+          </div>
+
+          <p class="watch-desc" id="watch-desc"></p>
+
+          <section class="comments" id="comments-section" aria-label="Bình luận">
+            <h3 class="comments-heading">
+              Bình luận
+              <span class="comments-count" id="comment-count">0</span>
+            </h3>
+
+            <form class="comment-form" id="comment-form" novalidate>
+              <label class="field comment-name-field">
+                <span class="sr-only">Tên của bạn</span>
+                <input type="text" id="comment-author" maxlength="40" placeholder="Tên của bạn" autocomplete="nickname" />
+              </label>
+              <label class="field comment-text-field">
+                <span class="sr-only">Nội dung bình luận</span>
+                <textarea id="comment-text" rows="2" maxlength="500" placeholder="Viết bình luận..."></textarea>
+              </label>
+              <button type="submit" class="btn btn-primary" id="btn-comment">Gửi</button>
+            </form>
+
+            <div class="comments-list" id="comments-list"></div>
+            <p class="comments-empty" id="comments-empty">Chưa có bình luận — hãy là người đầu tiên!</p>
+          </section>
+        </div>
+
+        <aside class="watch-aside">
+          <h3 class="aside-heading">Video khác</h3>
+          <div class="related-list" id="related-list"></div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="modal" id="upload-modal" aria-labelledby="upload-heading">
+    <form method="dialog" class="modal-panel" id="upload-form">
+      <header class="modal-head">
+        <h2 id="upload-heading">Đăng video mới</h2>
+        <button type="submit" class="icon-close" value="cancel" formnovalidate aria-label="Đóng">×</button>
+      </header>
+
+      <div class="modal-body">
+        <div class="mode-switch" role="tablist" aria-label="Cách đăng">
+          <button type="button" class="mode-btn is-active" id="mode-link" role="tab" aria-selected="true">Link công khai</button>
+          <button type="button" class="mode-btn" id="mode-file" role="tab" aria-selected="false">File trên máy</button>
+        </div>
+
+        <p class="mode-hint" id="mode-hint">
+          Dán link YouTube hoặc URL file .mp4 — mọi người trong phòng đều xem được.
+        </p>
+
+        <div id="panel-link">
+          <label class="field">
+            <span>Link video</span>
+            <input type="url" id="video-url" placeholder="https://www.youtube.com/watch?v=..." />
+          </label>
+        </div>
+
+        <div id="panel-file" hidden>
+          <label class="dropzone" id="dropzone" for="video-file">
+            <input type="file" id="video-file" accept="video/*" hidden />
+            <span class="dropzone-icon" aria-hidden="true">⬆</span>
+            <span class="dropzone-title">Chọn hoặc kéo thả video</span>
+            <span class="dropzone-hint">Chỉ lưu trên máy bạn — người khác không xem được file này</span>
+            <span class="dropzone-file" id="dropzone-file" hidden></span>
+          </label>
+          <div class="preview-wrap" id="preview-wrap" hidden>
+            <video id="preview-video" muted playsinline controls></video>
+          </div>
+        </div>
+
+        <div class="field" id="quality-field">
+          <span>Chất lượng tải lên</span>
+          <div class="quality-picks" id="quality-picks" role="radiogroup" aria-label="Chất lượng video">
+            <label class="quality-pick">
+              <input type="radio" name="upload-quality" value="360" />
+              <span>360p</span>
+            </label>
+            <label class="quality-pick">
+              <input type="radio" name="upload-quality" value="480" checked />
+              <span>480p</span>
+            </label>
+            <label class="quality-pick">
+              <input type="radio" name="upload-quality" value="720" />
+              <span>720p</span>
+            </label>
+            <label class="quality-pick">
+              <input type="radio" name="upload-quality" value="orig" />
+              <span>Gốc</span>
+            </label>
+          </div>
+          <p class="field-hint" id="quality-hint">Giống YouTube: chọn độ nét khi đăng. Khi xem có nút bánh răng để đổi.</p>
+        </div>
+
+        <label class="field">
+          <span>Tên hiển thị</span>
+          <input type="text" id="author-name" maxlength="40" placeholder="Tên của bạn" />
+        </label>
+
+        <label class="field">
+          <span>Tiêu đề</span>
+          <input type="text" id="video-title" maxlength="120" placeholder="Tên video..." />
+        </label>
+
+        <label class="field">
+          <span>Mô tả</span>
+          <textarea id="video-desc" rows="3" maxlength="500" placeholder="Nội dung ngắn (tuỳ chọn)"></textarea>
+        </label>
+      </div>
+
+      <footer class="modal-foot">
+        <button type="submit" class="btn btn-ghost" value="cancel" formnovalidate>Hủy</button>
+        <button type="button" class="btn btn-primary" id="btn-save">Đăng lên ClipHub</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="share-modal" aria-labelledby="share-heading">
+    <form method="dialog" class="modal-panel" id="share-form">
+      <header class="modal-head">
+        <h2 id="share-heading">Chia sẻ video</h2>
+        <button type="submit" class="icon-close" value="cancel" formnovalidate aria-label="Đóng">×</button>
+      </header>
+      <div class="modal-body">
+        <p class="share-title" id="share-video-title"></p>
+        <label class="field">
+          <span>Link video</span>
+          <div class="share-link-row">
+            <input type="text" id="share-link-input" readonly />
+            <button type="button" class="btn btn-primary" id="btn-copy-link">Sao chép</button>
+          </div>
+        </label>
+        <div class="share-actions">
+          <button type="button" class="btn btn-soft" id="btn-native-share">Chia sẻ thiết bị</button>
+          <button type="button" class="btn btn-ghost" id="btn-copy-text">Sao chép tiêu đề + link</button>
+        </div>
+      </div>
+      <footer class="modal-foot">
+        <button type="submit" class="btn btn-ghost" value="cancel" formnovalidate>Đóng</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="join-modal" aria-labelledby="join-heading">
+    <form method="dialog" class="modal-panel" id="join-form">
+      <header class="modal-head">
+        <h2 id="join-heading">Vào phòng khác</h2>
+        <button type="submit" class="icon-close" value="cancel" formnovalidate aria-label="Đóng">×</button>
+      </header>
+      <div class="modal-body">
+        <p class="mode-hint">Dán mã phòng hoặc link mời bạn nhận được.</p>
+        <label class="field">
+          <span>Mã / link phòng</span>
+          <input type="text" id="join-input" placeholder="Mã phòng hoặc https://...?room=..." required />
+        </label>
+      </div>
+      <footer class="modal-foot">
+        <button type="submit" class="btn btn-ghost" value="cancel" formnovalidate>Hủy</button>
+        <button type="button" class="btn btn-primary" id="btn-join-confirm">Vào phòng</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

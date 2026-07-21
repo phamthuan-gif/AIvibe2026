@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Địa danh Hàn Quốc — Cầu Nối Việt–Hàn</title>
+  <meta name="description" content="Khám phá địa danh nổi tiếng Hàn Quốc và xem chỉ đường Google Maps từ địa chỉ của bạn." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Cormorant+Infant:ital,wght@0,500;0,600;0,700;1,500&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="page-places" data-title-key="meta.title.placesKr">
+  <div class="page-wash" aria-hidden="true"></div>
+
+  <header class="site-header site-header--solid" id="top">
+    <a class="logo" href="index.html">
+      <span class="logo-mark" aria-hidden="true"></span>
+      <span class="logo-text" data-i18n="brand">Cầu Nối Việt–Hàn</span>
+    </a>
+    <nav class="nav" data-i18n-aria="nav.main" aria-label="Điều hướng chính">
+      <a href="index.html" data-i18n="nav.home">Trang chủ</a>
+      <div class="nav-item has-dropdown">
+        <a href="gioi-thieu.html" class="nav-parent" data-i18n="nav.intro">Giới thiệu</a>
+        <ul class="nav-dropdown" role="list">
+          <li><a href="gioi-thieu.html#ngoai-giao" data-i18n="nav.diplomacy">Ngoại giao</a></li>
+          <li><a href="gioi-thieu.html#hop-tac" data-i18n="nav.coop">Hợp tác</a></li>
+          <li><a href="gioi-thieu.html#giao-luu" data-i18n="nav.exchange">Giao lưu</a></li>
+        </ul>
+      </div>
+      <div class="nav-item has-dropdown">
+        <a href="van-hoa-viet-nam.html" class="nav-parent" data-i18n="nav.culture">Văn hóa VN</a>
+        <ul class="nav-dropdown" role="list">
+          <li><a href="van-hoa-viet-nam.html#lich-su" data-i18n="toc.history">Lịch sử</a></li>
+          <li><a href="van-hoa-viet-nam.html#am-thuc" data-i18n="toc.food">Ẩm thực</a></li>
+          <li><a href="van-hoa-viet-nam.html#le-hoi" data-i18n="toc.festival">Lễ hội</a></li>
+          <li><a href="van-hoa-viet-nam.html#trang-phuc" data-i18n="toc.costume">Trang phục</a></li>
+          <li><a href="van-hoa-viet-nam.html#di-san" data-i18n="toc.heritage">Di sản</a></li>
+        </ul>
+      </div>
+      <div class="nav-item has-dropdown">
+        <a href="van-hoa-han-quoc.html" class="nav-parent" data-i18n="nav.cultureKr">Văn hóa HQ</a>
+        <ul class="nav-dropdown" role="list">
+          <li><a href="van-hoa-han-quoc.html#lich-su" data-i18n="toc.history">Lịch sử</a></li>
+          <li><a href="van-hoa-han-quoc.html#am-thuc" data-i18n="toc.food">Ẩm thực</a></li>
+          <li><a href="van-hoa-han-quoc.html#le-hoi" data-i18n="toc.festival">Lễ hội</a></li>
+          <li><a href="van-hoa-han-quoc.html#trang-phuc" data-i18n="toc.costume">Trang phục</a></li>
+          <li><a href="van-hoa-han-quoc.html#di-san" data-i18n="toc.heritage">Di sản</a></li>
+        </ul>
+      </div>
+      <div class="nav-item has-dropdown">
+        <a href="dia-danh-viet-nam.html" class="nav-parent" data-i18n="nav.places">Địa danh VN</a>
+        <ul class="nav-dropdown" role="list">
+          <li><a href="dia-danh-viet-nam.html#hoian" data-i18n="place.nav.hoian">Hội An</a></li>
+          <li><a href="dia-danh-viet-nam.html#banahill" data-i18n="place.nav.banahill">Cầu Vàng</a></li>
+          <li><a href="dia-danh-viet-nam.html#hanoi" data-i18n="place.nav.hanoi">Hà Nội</a></li>
+          <li><a href="dia-danh-viet-nam.html#sapa" data-i18n="place.nav.sapa">Ruộng bậc thang</a></li>
+          <li><a href="dia-danh-viet-nam.html#taxua" data-i18n="place.nav.taxua">Tà Xùa</a></li>
+          <li><a href="dia-danh-viet-nam.html#hue" data-i18n="place.nav.hue">Huế</a></li>
+        </ul>
+      </div>
+      <div class="nav-item has-dropdown">
+        <a href="dia-danh-han-quoc.html" class="nav-parent" aria-current="page" data-i18n="nav.placesKr">Địa danh HQ</a>
+        <ul class="nav-dropdown" role="list">
+          <li><a href="#gyeongbok" data-i18n="placeKr.nav.gyeongbok">Gyeongbokgung</a></li>
+          <li><a href="#bukchon" data-i18n="placeKr.nav.bukchon">Bukchon</a></li>
+          <li><a href="#nseoul" data-i18n="placeKr.nav.nseoul">N Seoul Tower</a></li>
+          <li><a href="#busan" data-i18n="placeKr.nav.busan">Busan</a></li>
+          <li><a href="#jeju" data-i18n="placeKr.nav.jeju">Jeju</a></li>
+          <li><a href="#gyeongju" data-i18n="placeKr.nav.gyeongju">Gyeongju</a></li>
+        </ul>
+      </div>
+      <a href="../07-nhan-dien-guong-mat/index.html" data-i18n="nav.facesort">FaceSort</a>
+    </nav>
+    <div class="header-tools">
+      <div class="lang-switch" role="group" data-i18n-aria="lang.label" aria-label="Chọn ngôn ngữ">
+        <button type="button" data-lang="vi" aria-pressed="true">VI</button>
+        <button type="button" data-lang="ko" aria-pressed="false">KR</button>
+      </div>
+      <button class="nav-toggle" type="button" data-i18n-aria="nav.open" aria-label="Mở menu" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro-banner culture-banner">
+      <div class="section-inner">
+        <p class="eyebrow" data-i18n="placesKr.eyebrow">Du lịch &amp; khám phá</p>
+        <h1 class="intro-banner-title" data-i18n="placesKr.title">Địa danh Hàn Quốc</h1>
+        <p class="section-lead" data-i18n="placesKr.lead">
+          Chọn một địa danh để xem giới thiệu, rồi nhập địa chỉ của bạn để hiện chỉ đường trên Google Maps.
+        </p>
+      </div>
+    </section>
+
+    <section class="places-layout section-inner">
+      <div class="place-list" id="place-list" role="listbox" aria-label="Danh sách địa danh">
+        <button class="place-item is-active" type="button" role="option" data-place="gyeongbok" id="gyeongbok" aria-selected="true">
+          <img src="assets/kr-lich-su.jpg" alt="" width="120" height="80" />
+          <span>
+            <strong data-i18n="placeKr.nav.gyeongbok">Gyeongbokgung</strong>
+            <em>Seoul</em>
+          </span>
+        </button>
+        <button class="place-item" type="button" role="option" data-place="bukchon" id="bukchon" aria-selected="false">
+          <img src="assets/kr-trang-phuc.jpg" alt="" width="120" height="80" />
+          <span>
+            <strong data-i18n="placeKr.nav.bukchon">Bukchon</strong>
+            <em>Seoul</em>
+          </span>
+        </button>
+        <button class="place-item" type="button" role="option" data-place="nseoul" id="nseoul" aria-selected="false">
+          <img src="assets/kr-di-san.jpg" alt="" width="120" height="80" />
+          <span>
+            <strong data-i18n="placeKr.nav.nseoul">N Seoul Tower</strong>
+            <em>Namsan</em>
+          </span>
+        </button>
+        <button class="place-item" type="button" role="option" data-place="busan" id="busan" aria-selected="false">
+          <img src="assets/kr-am-thuc.jpg" alt="" width="120" height="80" />
+          <span>
+            <strong data-i18n="placeKr.nav.busan">Busan</strong>
+            <em>Gamcheon</em>
+          </span>
+        </button>
+        <button class="place-item" type="button" role="option" data-place="jeju" id="jeju" aria-selected="false">
+          <img src="assets/kr-le-hoi.jpg" alt="" width="120" height="80" />
+          <span>
+            <strong data-i18n="placeKr.nav.jeju">Jeju</strong>
+            <em>Seongsan</em>
+          </span>
+        </button>
+        <button class="place-item" type="button" role="option" data-place="gyeongju" id="gyeongju" aria-selected="false">
+          <img src="assets/kr-di-san.jpg" alt="" width="120" height="80" />
+          <span>
+            <strong data-i18n="placeKr.nav.gyeongju">Gyeongju</strong>
+            <em>Bulguksa</em>
+          </span>
+        </button>
+      </div>
+
+      <div class="place-panel">
+        <div class="place-hero">
+          <img id="place-image" src="assets/kr-lich-su.jpg" alt="Cung Gyeongbokgung" width="1200" height="700" />
+        </div>
+        <p class="place-region" id="place-region">Seoul</p>
+        <h2 class="place-title" id="place-title">Cung Gyeongbokgung</h2>
+        <p class="place-desc" id="place-desc">
+          Cung điện chính của triều Joseon giữa trung tâm Seoul.
+        </p>
+
+        <form class="directions-form" id="directions-form">
+          <p class="directions-label" data-i18n="places.form.label">Chỉ đường đến địa danh này</p>
+          <label class="sr-only" for="origin-input" data-i18n="places.form.origin">Địa chỉ của bạn</label>
+          <div class="directions-row">
+            <input
+              id="origin-input"
+              name="origin"
+              type="text"
+              autocomplete="street-address"
+              data-i18n-placeholder="placesKr.form.placeholder"
+              placeholder="Nhập địa chỉ của bạn (vd: Incheon Airport, Seoul)"
+              required
+            />
+            <button class="btn btn-primary" type="submit" data-i18n="places.form.submit">Xem chỉ đường</button>
+          </div>
+          <p class="directions-note" data-i18n="places.form.note">
+            Nhập địa chỉ xuất phát — bản đồ sẽ hiện lộ trình tới địa danh đang chọn.
+          </p>
+        </form>
+
+        <p class="map-hint" id="map-hint" hidden></p>
+        <div class="map-frame-wrap">
+          <iframe
+            id="map-frame"
+            title="Google Maps"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <a class="btn btn-back map-open" id="map-open" href="#" target="_blank" rel="noopener noreferrer" data-i18n="places.map.open">
+          Mở trên Google Maps
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p data-i18n-html="footer.line">
+      <strong>Cầu Nối Việt–Hàn</strong> — Giao lưu văn hóa Việt Nam &amp; Hàn Quốc
+    </p>
+    <p class="footer-meta" data-i18n="footer.meta">
+      Vietnam · Republic of Korea · Cultural Exchange
+    </p>
+  </footer>
+
+  <script src="i18n.js"></script>
+  <script src="script.js"></script>
+  <script src="landmarks-kr.js"></script>
+</body>
+</html>

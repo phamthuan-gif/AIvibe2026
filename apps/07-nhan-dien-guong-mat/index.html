@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FaceSort — Nhận diện hình ảnh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Outfit:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true">
+    <span class="blob blob-a"></span>
+    <span class="blob blob-b"></span>
+    <span class="blob blob-c"></span>
+    <span class="spark spark-1"></span>
+    <span class="spark spark-2"></span>
+    <span class="spark spark-3"></span>
+    <span class="spark spark-4"></span>
+    <span class="grid-fade"></span>
+  </div>
+
+  <main class="app">
+    <nav class="hub-links reveal" style="--d: 0s" aria-label="Điều hướng">
+      <a class="hub-back" href="../06-giao-luu-vn-hq/dia-danh-han-quoc.html">← Cầu Nối Việt–Hàn</a>
+      <a class="hub-back hub-back--muted" href="../../index.html">AIvibe2026</a>
+    </nav>
+    <header class="hero reveal" style="--d: 0.08s">
+      <h1 class="brand">
+        <span class="brand-wave">FaceSort</span>
+      </h1>
+      <p class="lead">
+        Phân loại khuôn mặt hoặc vật thể bằng camera hoặc ảnh tải lên — theo model Teachable Machine của bạn.
+      </p>
+    </header>
+
+    <div class="mode-switch reveal" style="--d: 0.16s" role="tablist" aria-label="Chế độ nhận diện">
+      <span class="mode-pill" id="mode-pill" aria-hidden="true"></span>
+      <button type="button" class="mode-btn is-active" id="mode-camera" role="tab" aria-selected="true">
+        Camera
+      </button>
+      <button type="button" class="mode-btn" id="mode-upload" role="tab" aria-selected="false">
+        Hình ảnh
+      </button>
+    </div>
+
+    <section class="stage">
+      <div class="input-panel reveal" style="--d: 0.24s">
+        <!-- CAMERA -->
+        <div id="panel-camera" class="mode-panel">
+          <div id="webcam-container" class="preview" aria-live="polite">
+            <div class="preview-placeholder" id="webcam-placeholder">
+              <span class="placeholder-face" aria-hidden="true"></span>
+              <p>Camera sẽ hiện ở đây</p>
+            </div>
+          </div>
+          <p class="status" id="status-camera" aria-live="polite">Sẵn sàng khi bạn bật camera.</p>
+          <div class="actions">
+            <button type="button" id="btn-start" class="btn primary">Bật camera</button>
+            <button type="button" id="btn-stop" class="btn ghost" disabled>Tắt</button>
+          </div>
+        </div>
+
+        <!-- UPLOAD -->
+        <div id="panel-upload" class="mode-panel" hidden>
+          <div
+            id="drop-zone"
+            class="preview drop-zone"
+            tabindex="0"
+            role="button"
+            aria-label="Chọn hoặc kéo thả ảnh để nhận diện"
+          >
+            <img id="upload-preview" class="upload-img hidden" alt="Ảnh đã chọn" />
+            <div class="preview-placeholder" id="upload-placeholder">
+              <span class="placeholder-photo" aria-hidden="true"></span>
+              <p>Kéo thả ảnh vào đây</p>
+              <p class="hint">hoặc bấm để chọn file</p>
+            </div>
+          </div>
+          <input type="file" id="file-input" accept="image/*" hidden />
+          <p class="status" id="status-upload" aria-live="polite">Chọn ảnh JPG, PNG hoặc WEBP.</p>
+          <div class="actions">
+            <button type="button" id="btn-pick" class="btn primary">Chọn ảnh</button>
+            <button type="button" id="btn-clear" class="btn ghost" disabled>Xóa ảnh</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-panel reveal" style="--d: 0.32s" id="result-panel">
+        <p class="result-label">Kết quả mạnh nhất</p>
+        <p class="top-class" id="top-class">—</p>
+        <p class="top-confidence" id="top-confidence">0%</p>
+        <p class="result-label scores-label">Phần trăm giống từng loại</p>
+        <div id="label-container" class="predictions" role="list" aria-label="Phần trăm giống từng loại"></div>
+      </div>
+    </section>
+
+    <p class="footnote reveal" style="--d: 0.4s">
+      Model:
+      <a href="https://teachablemachine.withgoogle.com/models/SOIeZuRMh/" target="_blank" rel="noopener noreferrer">
+        teachablemachine.withgoogle.com/models/SOIeZuRMh
+      </a>
+    </p>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.5/dist/teachablemachine-image.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

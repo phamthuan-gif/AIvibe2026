@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tỷ Phú — Cờ tỷ phú vui nhộn</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true">
+    <span class="blob blob-a"></span>
+    <span class="blob blob-b"></span>
+    <span class="blob blob-c"></span>
+    <span class="dots"></span>
+    <span class="coin coin-1"></span>
+    <span class="coin coin-2"></span>
+    <span class="coin coin-3"></span>
+  </div>
+
+  <!-- Setup -->
+  <section class="screen screen-setup is-active" id="screen-setup" aria-label="Màn hình bắt đầu">
+    <div class="setup-tools">
+      <div class="lang-switch" role="group" data-i18n-aria="lang.label" aria-label="Ngôn ngữ">
+        <button type="button" class="lang-btn is-active" data-lang="vi" aria-pressed="true">VI</button>
+        <button type="button" class="lang-btn" data-lang="ko" aria-pressed="false">한</button>
+      </div>
+      <button type="button" class="sound-toggle" id="btn-sound" aria-pressed="false" data-i18n-title="sound.titleOn" title="Bật/tắt âm thanh">
+        <span class="sound-icon" aria-hidden="true">♪</span>
+        <span class="sound-text" data-i18n="sound.on">Âm thanh</span>
+      </button>
+    </div>
+    <a class="hub-link" href="../../index.html">AIvibe2026</a>
+    <div class="setup-panel">
+      <div class="mascot" aria-hidden="true">
+        <span class="mascot-hat"></span>
+        <span class="mascot-face">
+          <span class="eye"></span>
+          <span class="eye"></span>
+          <span class="smile"></span>
+        </span>
+        <span class="mascot-bag">$</span>
+      </div>
+      <p class="brand">
+        <span class="brand-word" data-i18n="brand.a">Tỷ</span>
+        <span class="brand-word brand-word-b" data-i18n="brand.b">Phú</span>
+      </p>
+      <h1 class="setup-title" data-i18n="setup.title">Cờ tỷ phú siêu vui!</h1>
+      <p class="setup-lead" data-i18n="setup.lead">Tung xúc xắc, săn đất đẹp, xây nhà liền tay — ai hết tiền thì… về nhà nuôi cá!</p>
+
+      <label class="field">
+        <span data-i18n="setup.count">Bao nhiêu người chơi nào?</span>
+        <select id="player-count">
+          <option value="2" selected data-i18n="setup.opt2">2 người — đấu tay đôi</option>
+          <option value="3" data-i18n="setup.opt3">3 người — càng đông càng vui</option>
+          <option value="4" data-i18n="setup.opt4">4 người — đại chiến tỷ phú</option>
+        </select>
+      </label>
+
+      <div class="player-fields" id="player-fields"></div>
+
+      <button type="button" class="btn btn-primary btn-pop" id="btn-start">
+        <span class="btn-shine" aria-hidden="true"></span>
+        <span data-i18n="setup.start">Vào bàn nào!</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Game -->
+  <section class="screen screen-game" id="screen-game" aria-label="Bàn cờ">
+    <header class="game-top">
+      <a class="brand-sm" href="#" id="btn-home" data-i18n-title="game.homeTitle" title="Về màn hình chọn người chơi">
+        <span class="brand-sm-dot" aria-hidden="true"></span>
+        <span data-i18n="brand.full">Tỷ Phú</span>
+      </a>
+      <p class="turn-banner" id="turn-banner" data-i18n="game.turn">Lượt chơi</p>
+      <div class="top-right">
+        <div class="lang-switch lang-switch-inline" role="group" data-i18n-aria="lang.label" aria-label="Ngôn ngữ">
+          <button type="button" class="lang-btn is-active" data-lang="vi" aria-pressed="true">VI</button>
+          <button type="button" class="lang-btn" data-lang="ko" aria-pressed="false">한</button>
+        </div>
+        <button type="button" class="sound-toggle sound-toggle-inline" id="btn-sound-game" aria-pressed="false" data-i18n-title="sound.titleOn" title="Bật/tắt âm thanh">
+          <span class="sound-icon" aria-hidden="true">♪</span>
+        </button>
+        <a class="hub-link hub-link-inline" href="../../index.html">AIvibe2026</a>
+      </div>
+    </header>
+
+    <div class="game-layout">
+      <div class="board-wrap">
+        <div class="board-frame" aria-hidden="true">
+          <span class="frame-corner tl"></span>
+          <span class="frame-corner tr"></span>
+          <span class="frame-corner bl"></span>
+          <span class="frame-corner br"></span>
+          <span class="frame-light"></span>
+        </div>
+        <div class="board" id="board" data-i18n-aria="game.boardAria" aria-label="Bàn cờ tỷ phú"></div>
+        <div class="fx-layer" id="fx-layer" aria-hidden="true"></div>
+      </div>
+
+      <aside class="sidebar">
+        <div class="dice-panel">
+          <p class="dice-label" data-i18n="game.dice">Xúc xắc may mắn</p>
+          <div class="dice-pair" aria-live="polite">
+            <div class="die" id="die1" data-face="0" data-i18n-aria="game.die1" aria-label="Xúc xắc 1">
+              <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+              <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+              <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+            </div>
+            <div class="die" id="die2" data-face="0" data-i18n-aria="game.die2" aria-label="Xúc xắc 2">
+              <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+              <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+              <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary btn-roll btn-pop" id="btn-roll">
+            <span class="btn-shine" aria-hidden="true"></span>
+            <span data-i18n="game.roll">Tung đi!</span>
+          </button>
+        </div>
+
+        <div class="players-panel" id="players-panel"></div>
+
+        <div class="log-panel">
+          <h2 data-i18n="game.log">Chuyện gì đang xảy ra?</h2>
+          <ul class="log" id="game-log"></ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Action modal -->
+  <div class="modal" id="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-deco" aria-hidden="true"></div>
+      <div class="modal-sparkles" aria-hidden="true"><i></i><i></i><i></i></div>
+      <h2 id="modal-title">Thông báo</h2>
+      <p id="modal-body"></p>
+      <div class="modal-actions" id="modal-actions"></div>
+    </div>
+  </div>
+
+  <!-- Winner -->
+  <div class="modal" id="modal-win" hidden>
+    <div class="modal-card modal-win" role="dialog" aria-modal="true">
+      <div class="confetti" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <p class="win-label" data-i18n="win.label">Xin chúc mừng</p>
+      <h2 id="win-title">Người thắng</h2>
+      <p id="win-body"></p>
+      <button type="button" class="btn btn-primary btn-pop" id="btn-replay">
+        <span class="btn-shine" aria-hidden="true"></span>
+        <span data-i18n="win.replay">Chơi ván nữa!</span>
+      </button>
+    </div>
+  </div>
+
+  <script src="i18n.js"></script>
+  <script src="sounds.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
